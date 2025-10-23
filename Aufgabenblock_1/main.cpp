@@ -1,53 +1,141 @@
 /*
- * Source.cpp
+ * main.cpp
  *
  *  Created on: 18 Oct 2025
  *      Author: mikitabianko
  */
 #include <iostream>
-
-using namespace std;
+#include <vector>
 
 class Fahrzeug {
 private:
-	const string p_sName;
+	const std::string p_sName;
 	const int p_iID;
 	static inline int p_iMaxID = 0;
 public:
 	Fahrzeug() : p_sName(""), p_iID(p_iMaxID) {
 		++p_iMaxID;
-		cout << "Wurde ein Farzeig mit der Name: \"" << p_sName << "\", und dem Id: " << p_iID << " erstellt\n";
+		std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " erstellt\n";
 	}
-	Fahrzeug(string name) : p_sName(name), p_iID(p_iMaxID) {
+	Fahrzeug(std::string name) : p_sName(name), p_iID(p_iMaxID) {
 		++p_iMaxID;
-		cout << "Wurde ein Farzeig mit der Name: \"" << p_sName << "\", und dem Id: " << p_iID << " erstellt\n";
+		std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " erstellt\n";
 	}
 
 	~Fahrzeug() {
-		cout << "Wurde ein Farzeig mit der Name: \"" << p_sName << "\", und dem Id: " << p_iID << " gelöscht\n";
+		std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " gelöscht\n";
 	}
 };
 
 void vAufgabe_1() {
 	// Teil 1
 	{
-		Fahrzeug obj1;
-		Fahrzeug obj2("BMW");
+		std::cout << "Teil 1:\n";
+		Fahrzeug sObj1; // just for test name == """
+		Fahrzeug sObj2("sObj2");
 
-		auto ptr1 = new Fahrzeug();
-		auto ptr2 = new Fahrzeug("Tesla");
+		auto pPtr1 = new Fahrzeug("pPtr1");
+		auto pPtr2 = new Fahrzeug("pPtr2");
 
-		delete ptr1;
-		delete ptr2;
+		delete pPtr1;
+		delete pPtr2;
 
-		// Wurde ein Farzeig mit der Name: "", und dem Id: 0 erstellt
-		// Wurde ein Farzeig mit der Name: "BMW", und dem Id: 1 erstellt
-		// Wurde ein Farzeig mit der Name: "", und dem Id: 2 erstellt
-		// Wurde ein Farzeig mit der Name: "Tesla", und dem Id: 3 erstellt
-		// Wurde ein Farzeig mit der Name: "", und dem Id: 2 gelöscht
-		// Wurde ein Farzeig mit der Name: "Tesla", und dem Id: 3 gelöscht
-		// Wurde ein Farzeig mit der Name: "BMW", und dem Id: 1 gelöscht
-		// Wurde ein Farzeig mit der Name: "", und dem Id: 0 gelöscht
+		{ 
+		// Teil 1:
+		// Wurde ein Farzeig mit dem Namen: "", und mit dem Id: 0 erstellt
+		// Wurde ein Farzeig mit dem Namen: "sObj2", und mit dem Id: 1 erstellt
+		// Wurde ein Farzeig mit dem Namen: "pPtr1", und mit dem Id: 2 erstellt
+		// Wurde ein Farzeig mit dem Namen: "pPtr2", und mit dem Id: 3 erstellt
+		// Wurde ein Farzeig mit dem Namen: "pPtr1", und mit dem Id: 2 gelöscht
+		// Wurde ein Farzeig mit dem Namen: "pPtr2", und mit dem Id: 3 gelöscht
+		// Wurde ein Farzeig mit dem Namen: "sObj2", und mit dem Id: 1 gelöscht
+		// Wurde ein Farzeig mit dem Namen: "", und mit dem Id: 0 gelöscht
+		}
+	}
+	// Teil 2
+	{
+		std::cout << "\nTeil 2:\n";
+
+		auto pUnique1 = std::make_unique<Fahrzeug>("pUnique1");
+		auto pUnique2 = std::make_unique<Fahrzeug>("pUnique2");
+
+		auto pShared1 = std::make_shared<Fahrzeug>("pShared1");
+		auto pShared2 = std::make_shared<Fahrzeug>("pShared2");
+
+		std::cout << "pShared1.use_count() = " << pShared1.use_count() << " Speicheradresse: " << pShared1 << "\n";
+		std::cout << "pShared2.use_count() = " << pShared2.use_count() << " Speicheradresse: " << pShared2 << "\n";
+
+		std::cout << "Kopieren von pShared1 nach pShared3\n";
+		auto pShared3 = pShared1;
+		std::cout << "Kopieren abgeschlossen\n";
+
+		std::cout << "pShared1.use_count() = " << pShared1.use_count() << " Speicheradresse: " << pShared1 << "\n";
+		std::cout << "pShared2.use_count() = " << pShared2.use_count() << " Speicheradresse: " << pShared2 << "\n";
+		std::cout << "pShared3.use_count() = " << pShared3.use_count() << " Speicheradresse: " << pShared3 << "\n";
+
+		std::cout << "Vor dem Umzug " << (pUnique1 ? "nicht leer" : "leer") << "\n";
+		// auto pUnique3 = pUnique1;
+		// error: copy constructor is implicitly deleted because 'unique_ptr<Fahrzeug>' has a user-declared move constructor
+		auto pUnique3 = std::move(pUnique1);
+		std::cout << "Nach dem Umzug: pUnique1 ist " << (pUnique1 ? "nicht leer" : "leer") << "\n";
+
+		// Welche Fahrzeuge können Sie dort speichern? Nur die, die std::unique_ptr<Fahrzeug> sind.
+		// Wie müssen Sie den Besitzwechsel anzeigen? Durch .push_back() und std::move 
+		std::vector<std::unique_ptr<Fahrzeug>> pUniqueVectorFahrzeuge;
+		pUniqueVectorFahrzeuge.push_back(std::move(pUnique2));
+		pUniqueVectorFahrzeuge.push_back(std::move(pUnique3));
+		// pUniqueVectorFahrzeuge.push_back(std::move(pShared1)); // error - Einfach für Test
+
+		std::cout << "pUniqueVectorFahrzeuge.size() = " << pUniqueVectorFahrzeuge.size() 
+				<< "; pUniqueVectorFahrzeuge.capacity() = " << pUniqueVectorFahrzeuge.capacity() << "\n";
+		
+		pUniqueVectorFahrzeuge.clear();
+		// Beobachten Sie mit dem Debugger, was dort passiert und wann die Objekte durch Aufruf des Destruktors gelöscht werden. 
+		// Nach dem clear() Funktion
+
+		std::vector<std::shared_ptr<Fahrzeug>> pSharedVectorFahrzeuge;
+
+		auto pUnique4 = std::make_unique<Fahrzeug>("pUnique4");
+
+		// Welche Fahrzeuge können Sie dort speichern? 
+		// Sowohl shared_ptr, als auch unique_ptr
+		pSharedVectorFahrzeuge.push_back(std::move(pShared1));
+		pSharedVectorFahrzeuge.push_back(pShared2);
+		pSharedVectorFahrzeuge.push_back(std::move(pUnique4));
+		// pSharedVectorFahrzeuge.push_back(pUnique2); // error - da unique_ptr kein Kopieoperator hat.
+		std::cout << "pSharedVectorFahrzeuge[0].use_count() = " << pSharedVectorFahrzeuge[0].use_count() 
+			<< " Speicheradresse: " << pSharedVectorFahrzeuge[0] << "\n";
+		std::cout << "pSharedVectorFahrzeuge[1].use_count() = " << pSharedVectorFahrzeuge[1].use_count() 
+			<< " Speicheradresse: " << pSharedVectorFahrzeuge[1] << "\n";
+		std::cout << "pSharedVectorFahrzeuge[2].use_count() = " << pSharedVectorFahrzeuge[2].use_count() 
+			<< " Speicheradresse: " << pSharedVectorFahrzeuge[2] << "\n";
+		
+		{
+		// Teil 2:
+		// Wurde ein Farzeig mit dem Namen: "pUnique1", und mit dem Id: 4 erstellt
+		// Wurde ein Farzeig mit dem Namen: "pUnique2", und mit dem Id: 5 erstellt
+		// Wurde ein Farzeig mit dem Namen: "pShared1", und mit dem Id: 6 erstellt
+		// Wurde ein Farzeig mit dem Namen: "pShared2", und mit dem Id: 7 erstellt
+		// pShared1.use_count() = 1 Speicheradresse: 0x6000017c0218
+		// pShared2.use_count() = 1 Speicheradresse: 0x6000017c0258
+		// Kopieren von pShared1 nach pShared3
+		// Kopieren abgeschlossen
+		// pShared1.use_count() = 2 Speicheradresse: 0x6000017c0218
+		// pShared2.use_count() = 1 Speicheradresse: 0x6000017c0258
+		// pShared3.use_count() = 2 Speicheradresse: 0x6000017c0218
+		// Vor dem Umzug nicht leer
+		// Nach dem Umzug: pUnique1 ist leer
+		// pUniqueVectorFahrzeuge.size() = 2; pUniqueVectorFahrzeuge.capacity() = 2
+		// Wurde ein Farzeig mit dem Namen: "pUnique1", und mit dem Id: 4 gelöscht
+		// Wurde ein Farzeig mit dem Namen: "pUnique2", und mit dem Id: 5 gelöscht
+		// Wurde ein Farzeig mit dem Namen: "pUnique4", und mit dem Id: 8 erstellt
+		// pSharedVectorFahrzeuge[0].use_count() = 2 Speicheradresse: 0x6000017c0218
+		// pSharedVectorFahrzeuge[1].use_count() = 2 Speicheradresse: 0x6000017c0258
+		// pSharedVectorFahrzeuge[2].use_count() = 1 Speicheradresse: 0x6000002c11e0
+		// Wurde ein Farzeig mit dem Namen: "pUnique4", und mit dem Id: 8 gelöscht
+		// Wurde ein Farzeig mit dem Namen: "pShared1", und mit dem Id: 6 gelöscht
+		// Wurde ein Farzeig mit dem Namen: "pShared2", und mit dem Id: 7 gelöscht
+		}
 	}
 }
 
