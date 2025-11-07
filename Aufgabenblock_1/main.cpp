@@ -3,29 +3,13 @@
  *
  *  Created on: 18 Oct 2025
  *      Author: mikitabianko
+ * 	Repo: https://github.com/mikitabianko/RWTH-Praktikum-Informatik/tree/Aufgabenblock_1
  */
 #include <iostream>
-#include <vector>
+#include "Fahrzeug.h"
+#include "global.h"
 
-class Fahrzeug {
-private:
-	const std::string p_sName;
-	const int p_iID;
-	static inline int p_iMaxID = 0;
-public:
-	Fahrzeug() : p_sName(""), p_iID(p_iMaxID) {
-		++p_iMaxID;
-		std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " erstellt\n";
-	}
-	Fahrzeug(std::string name) : p_sName(name), p_iID(p_iMaxID) {
-		++p_iMaxID;
-		std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " erstellt\n";
-	}
-
-	~Fahrzeug() {
-		std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " gelöscht\n";
-	}
-};
+double dGlobaleZeit = 0.0;
 
 void vAufgabe_1() {
 	// Teil 1
@@ -139,9 +123,71 @@ void vAufgabe_1() {
 	}
 }
 
+void vAufgabe_1Tabelle() {
+	auto f = Fahrzeug("test", 5.6);
+
+	Fahrzeug::vKopf();
+	f.vAusgeben();
+}
+
+void vAufgabe_1a() {
+	const int iAnzahlFahrzeugen = 3;
+	
+	std::vector<std::unique_ptr<Fahrzeug>> pUniqueVectorFahrzeuge;
+	pUniqueVectorFahrzeuge.reserve(iAnzahlFahrzeugen);
+
+	for (int i = 0; i < iAnzahlFahrzeugen; ++i) {
+		std::string sName;
+		double dMaxGeschwindigkeit;
+		std::cout << "Bitte Name und Maximalgeschwindigkeit eingeben: ";
+		std::cin >> sName >> dMaxGeschwindigkeit;
+
+		pUniqueVectorFahrzeuge.push_back(std::make_unique<Fahrzeug>(sName, dMaxGeschwindigkeit));
+	}
+
+	const int iAnzahlSimulationsschritte = 5;
+	const double dZeittaktwert = 0.5;
+	Fahrzeug::vKopf();
+	for (int i = 0; i < iAnzahlSimulationsschritte; ++i) {
+		dGlobaleZeit += dZeittaktwert;
+		for (auto& pFahrzeug : pUniqueVectorFahrzeuge) {
+			pFahrzeug->vSimulieren();
+			pFahrzeug->vAusgeben();
+		}
+	}
+	// Bitte Name und Maximalgeschwindigkeit eingeben: f1 1.0
+	// Wurde ein Farzeig mit dem Namen: "f1", mit der maximalen Geschwindigkeit: 1, und mit dem Id: 0 erstellt
+	// Bitte Name und Maximalgeschwindigkeit eingeben: f2 1.5
+	// Wurde ein Farzeig mit dem Namen: "f2", mit der maximalen Geschwindigkeit: 1.5, und mit dem Id: 1 erstellt
+	// Bitte Name und Maximalgeschwindigkeit eingeben: f3 2.7
+	// Wurde ein Farzeig mit dem Namen: "f3", mit der maximalen Geschwindigkeit: 2.7, und mit dem Id: 2 erstellt
+	//  ID      Name  MaxGeschwindigkeit  Gesamtstrecke
+	//   0        f1                1.00           0.50
+	//   1        f2                1.50           0.75
+	//   2        f3                2.70           1.35
+	//   0        f1                1.00           1.00
+	//   1        f2                1.50           1.50
+	//   2        f3                2.70           2.70
+	//   0        f1                1.00           1.50
+	//   1        f2                1.50           2.25
+	//   2        f3                2.70           4.05
+	//   0        f1                1.00           2.00
+	//   1        f2                1.50           3.00
+	//   2        f3                2.70           5.40
+	//   0        f1                1.00           2.50
+	//   1        f2                1.50           3.75
+	//   2        f3                2.70           6.75
+	// Wurde ein Farzeig mit dem Namen: "f3", und mit dem Id: 2 gelöscht
+	// Wurde ein Farzeig mit dem Namen: "f2", und mit dem Id: 1 gelöscht
+	// Wurde ein Farzeig mit dem Namen: "f1", und mit dem Id: 0 gelöscht
+}
+
 int main() {
 
-	vAufgabe_1();
+	//vAufgabe_1();
+	//vAufgabe_1Tabelle();
+	vAufgabe_1a();
+
 
 	return 0;
 }
