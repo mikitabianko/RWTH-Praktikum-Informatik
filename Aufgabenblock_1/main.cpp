@@ -127,7 +127,9 @@ void vAufgabe_1Tabelle() {
 	auto f = Fahrzeug("test", 5.6);
 
 	Fahrzeug::vKopf();
+	std::cout << "\n";
 	f.vAusgeben();
+	std::cout << "\n";
 }
 
 void vAufgabe_1a() {
@@ -148,11 +150,13 @@ void vAufgabe_1a() {
 	const int iAnzahlSimulationsschritte = 5;
 	const double dZeittaktwert = 0.5;
 	Fahrzeug::vKopf();
+	std::cout << "\n";
 	for (int i = 0; i < iAnzahlSimulationsschritte; ++i) {
 		dGlobaleZeit += dZeittaktwert;
 		for (auto& pFahrzeug : pUniqueVectorFahrzeuge) {
 			pFahrzeug->vSimulieren();
 			pFahrzeug->vAusgeben();
+			std::cout << "\n";
 		}
 	}
 	// Bitte Name und Maximalgeschwindigkeit eingeben: f1 1.0
@@ -180,6 +184,10 @@ void vAufgabe_1a() {
 	// Wurde ein Farzeig mit dem Namen: "f3", und mit dem Id: 2 gelöscht
 	// Wurde ein Farzeig mit dem Namen: "f2", und mit dem Id: 1 gelöscht
 	// Wurde ein Farzeig mit dem Namen: "f1", und mit dem Id: 0 gelöscht
+}
+
+void vAufgabe_2() {
+
 }
 
 int main() {

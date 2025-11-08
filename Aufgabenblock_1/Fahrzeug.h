@@ -11,24 +11,29 @@ private:
 	const std::string p_sName;
 	const int p_iID;
 	static inline int p_iMaxID = 0;
-	
-	double p_dMaxGeschwindigkeit; // die Maximalgeschwindigkeit des Fahrzeugs
-	double p_dGesamtStrecke; // die bisher zurückgelegte Gesamtstrecke 
-	double p_dGesamtZeit; // die gesamte Fahrzeit
-	double p_dZeit; // die Zeit, zu der das Fahrzeug zuletzt simuliert wurde
+
+protected:
+	double p_dMaxGeschwindigkeit = 0.0; // die Maximalgeschwindigkeit des Fahrzeugs
+	double p_dGesamtStrecke = 0.0; // die bisher zurückgelegte Gesamtstrecke 
+	double p_dGesamtZeit = 0.0; // die gesamte Fahrzeit
+	double p_dZeit = 0.0; // die Zeit, zu der das Fahrzeug zuletzt simuliert wurde
 public:
 	Fahrzeug();
+	
 	Fahrzeug(std::string sName);
-
 	Fahrzeug(std::string sName, double dMaxGeschwindigkei);
 
-	~Fahrzeug();
+	virtual ~Fahrzeug();
 
 	static void vKopf();
 
-	void vAusgeben();
+	virtual void vAusgeben();
 
-	void vSimulieren();
+	virtual void vSimulieren();
+
+	virtual double dGeschwindigkeit();
+
+	virtual double dTanken(double dMenge = std::numeric_limits<double>::infinity());
 };
 
 #endif
