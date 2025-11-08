@@ -3,6 +3,10 @@
 
 #include "Fahrzeug.h"
 #include <limits>
+#include "Utils.h"
+#include <algorithm>
+#include <cmath>
+
 
 class PKW : public Fahrzeug {
 private:
@@ -19,8 +23,6 @@ public:
     double dTanken(double dMenge = std::numeric_limits<double>::infinity()) override;
 
     void vAusgeben() override;
-
-    static void vKopf();
 };
 
 #endif // PKW_H

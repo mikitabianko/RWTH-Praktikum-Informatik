@@ -5,10 +5,14 @@
 
 class Fahrrad : public Fahrzeug {
 private:
-    double p_dGewicht = 0.0;   // kg (affects speed on hills, but we keep it simple)
-
 public:
-    Fahrrad(std::string sName, double dMaxGeschwindigkeit, double dGewicht = 12.0);
+    Fahrrad(std::string sName, double dMaxGeschwindigkeit);
+
+    void vSimulieren() override;
+
+    double dGeschwindigkeit() override;
+
+    void vAusgeben() override;
 };
 
 #endif // FAHRRAD_H

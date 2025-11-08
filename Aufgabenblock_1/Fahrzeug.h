@@ -34,6 +34,9 @@ public:
 	virtual double dGeschwindigkeit();
 
 	virtual double dTanken(double dMenge = std::numeric_limits<double>::infinity());
+
+	// Die Funktion wurde für die Funktion vAufgabe_2() erstellt und dient dazu, den Namen eines betankten Fahrzeugs anzuzeigen.
+	std::string sGetName();
 };
 
 #endif

@@ -1,6 +1,4 @@
-#include "PKW.H"
-#include <algorithm>
-#include <cmath>
+#include "PKW.h"
 
 PKW::PKW(std::string sName, double dMaxGeschwindigkeit,
          double dVerbrauch, double dTankvolumen)
@@ -22,10 +20,6 @@ double PKW::dTanken(double dMenge) {
 
     p_dTankinhalt += dGetankt;
     return dGetankt;
-}
-
-bool bIsGleich(double dA, double dB, double dEpsilon) {
-    return std::fabs(dA - dB) < dEpsilon;
 }
 
 void PKW::vSimulieren() {
@@ -57,15 +51,11 @@ void PKW::vSimulieren() {
     }
 }
 
-void PKW::vKopf() {
-    Fahrzeug::vKopf();
-    std::cout << std::right << std::setw(17) << "Gesamtverbrauch";
-    std::cout << std::right << std::setw(12) << "Tankinhalt";
-}
-
 void PKW::vAusgeben() {
     Fahrzeug::vAusgeben();
-    std::cout << std::fixed << std::setprecision(2);
-    std::cout << std::right << std::setw(17) << p_dGesamtStrecke * p_dVerbrauch * 100; // [km * l / (100km)]
-    std::cout << std::right << std::setw(12) << p_dTankinhalt;
+    std::cout << std::right
+              << std::fixed << std::setprecision(2)
+              << std::setw(17) << p_dGesamtStrecke * p_dVerbrauch / 100
+              << std::setw(12) << p_dTankinhalt
+              << std::setw(26) << dGeschwindigkeit();
 }
