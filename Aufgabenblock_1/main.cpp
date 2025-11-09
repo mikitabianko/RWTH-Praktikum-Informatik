@@ -6,6 +6,7 @@
  * 	Repo: https://github.com/mikitabianko/RWTH-Praktikum-Informatik/tree/Aufgabenblock_1
  */
 #include <iostream>
+#include <algorithm>
 #include "Fahrzeug.h"
 #include "global.h"
 #include "Fahrrad.h"
@@ -127,11 +128,11 @@ void vAufgabe_1() {
 }
 
 void vAufgabe_1Tabelle() {
-	auto f = Fahrzeug("test", 5.6);
+	Fahrzeug f("test", 5.6);
 
 	Fahrzeug::vKopf();
 	std::cout << "\n";
-	f.vAusgeben();
+	f.vAusgeben(std::cout);
 	std::cout << "\n";
 }
 
@@ -158,7 +159,7 @@ void vAufgabe_1a() {
 		dGlobaleZeit += dZeittaktwert;
 		for (auto& pFahrzeug : pUniqueVectorFahrzeuge) {
 			pFahrzeug->vSimulieren();
-			pFahrzeug->vAusgeben();
+			pFahrzeug->vAusgeben(std::cout);
 			std::cout << "\n";
 		}
 	}
@@ -232,7 +233,7 @@ void vAufgabe_2() {
 		}
 		for (auto& pFahrzeug : pVectorFahrzeuge) {
 			pFahrzeug->vSimulieren();
-			pFahrzeug->vAusgeben();
+			pFahrzeug->vAusgeben(std::cout);
 			std::cout << "\n";
 		}
 	}
@@ -256,33 +257,33 @@ void vAufgabe_2() {
 	//   0    f1               20.00          10.00                -           -                     20.00
 	//   1    f2               18.00           9.00                -           -                     18.00
 	//   2    f3               22.00          11.00                -           -                     22.00
-	//   3    p1              220.00         110.00             5.50       17.00                    220.00
-	//   4    p2              250.00         125.00             6.25       28.75                    250.00
-	//   5    p3              300.00         150.00            10.50       14.50                    300.00
+	//   3    p1              220.00         110.00             5.50       17.00                         -
+	//   4    p2              250.00         125.00             6.25       28.75                         -
+	//   5    p3              300.00         150.00            10.50       14.50                         -
 	//   0    f1               20.00          20.00                -           -                     18.00
 	//   1    f2               18.00          18.00                -           -                     18.00
 	//   2    f3               22.00          22.00                -           -                     19.80
-	//   3    p1              220.00         220.00            11.00       11.50                    220.00
-	//   4    p2              250.00         250.00            12.50       22.50                    250.00
-	//   5    p3              300.00         300.00            21.00        4.00                    300.00
+	//   3    p1              220.00         220.00            11.00       11.50                         -
+	//   4    p2              250.00         250.00            12.50       22.50                         -
+	//   5    p3              300.00         300.00            21.00        4.00                         -
 	//   0    f1               20.00          29.00                -           -                     18.00
 	//   1    f2               18.00          27.00                -           -                     16.20
 	//   2    f3               22.00          31.90                -           -                     19.80
-	//   3    p1              220.00         330.00            16.50        6.00                    220.00
-	//   4    p2              250.00         375.00            18.75       16.25                    250.00
-	//   5    p3              300.00         357.14            25.00        0.00                    300.00
+	//   3    p1              220.00         330.00            16.50        6.00                         -
+	//   4    p2              250.00         375.00            18.75       16.25                         -
+	//   5    p3              300.00         357.14            25.00        0.00                         -
 	//   0    f1               20.00          38.00                -           -                     18.00
 	//   1    f2               18.00          35.10                -           -                     16.20
 	//   2    f3               22.00          41.80                -           -                     17.82
-	//   3    p1              220.00         440.00            22.00        0.50                    220.00
-	//   4    p2              250.00         500.00            25.00       10.00                    250.00
-	//   5    p3              300.00         357.14            25.00        0.00                    300.00
+	//   3    p1              220.00         440.00            22.00        0.50                         -
+	//   4    p2              250.00         500.00            25.00       10.00                         -
+	//   5    p3              300.00         357.14            25.00        0.00                         -
 	//   0    f1               20.00          47.00                -           -                     16.20
 	//   1    f2               18.00          43.20                -           -                     14.58
 	//   2    f3               22.00          50.71                -           -                     17.82
-	//   3    p1              220.00         450.00            22.50        0.00                    220.00
-	//   4    p2              250.00         625.00            31.25        3.75                    250.00
-	//   5    p3              300.00         357.14            25.00        0.00                    300.00
+	//   3    p1              220.00         450.00            22.50        0.00                         -
+	//   4    p2              250.00         625.00            31.25        3.75                         -
+	//   5    p3              300.00         357.14            25.00        0.00                         -
 	// f1 wurde mit 0.00 Litern betankt
 	// f2 wurde mit 0.00 Litern betankt
 	// f3 wurde mit 0.00 Litern betankt
@@ -292,33 +293,33 @@ void vAufgabe_2() {
 	//   0    f1               20.00          55.10                -           -                     16.20
 	//   1    f2               18.00          50.49                -           -                     14.58
 	//   2    f3               22.00          59.62                -           -                     17.82
-	//   3    p1              220.00         560.00            28.00       39.50                    220.00
-	//   4    p2              250.00         750.00            37.50       63.75                    250.00
-	//   5    p3              300.00         807.14            56.50       18.50                    300.00
+	//   3    p1              220.00         560.00            28.00       39.50                         -
+	//   4    p2              250.00         750.00            37.50       63.75                         -
+	//   5    p3              300.00         807.14            56.50       18.50                         -
 	//   0    f1               20.00          63.20                -           -                     14.58
 	//   1    f2               18.00          57.78                -           -                     14.58
 	//   2    f3               22.00          68.53                -           -                     16.04
-	//   3    p1              220.00         670.00            33.50       34.00                    220.00
-	//   4    p2              250.00         875.00            43.75       57.50                    250.00
-	//   5    p3              300.00         957.14            67.00        8.00                    300.00
+	//   3    p1              220.00         670.00            33.50       34.00                         -
+	//   4    p2              250.00         875.00            43.75       57.50                         -
+	//   5    p3              300.00         957.14            67.00        8.00                         -
 	//   0    f1               20.00          70.49                -           -                     14.58
 	//   1    f2               18.00          65.07                -           -                     13.12
 	//   2    f3               22.00          76.55                -           -                     16.04
-	//   3    p1              220.00         780.00            39.00       28.50                    220.00
-	//   4    p2              250.00        1000.00            50.00       51.25                    250.00
-	//   5    p3              300.00        1071.43            75.00        0.00                    300.00
+	//   3    p1              220.00         780.00            39.00       28.50                         -
+	//   4    p2              250.00        1000.00            50.00       51.25                         -
+	//   5    p3              300.00        1071.43            75.00        0.00                         -
 	//   0    f1               20.00          77.78                -           -                     14.58
 	//   1    f2               18.00          71.63                -           -                     13.12
 	//   2    f3               22.00          84.57                -           -                     14.43
-	//   3    p1              220.00         890.00            44.50       23.00                    220.00
-	//   4    p2              250.00        1125.00            56.25       45.00                    250.00
-	//   5    p3              300.00        1071.43            75.00        0.00                    300.00
+	//   3    p1              220.00         890.00            44.50       23.00                         -
+	//   4    p2              250.00        1125.00            56.25       45.00                         -
+	//   5    p3              300.00        1071.43            75.00        0.00                         -
 	//   0    f1               20.00          85.07                -           -                     13.12
 	//   1    f2               18.00          78.19                -           -                     13.12
 	//   2    f3               22.00          91.79                -           -                     14.43
-	//   3    p1              220.00        1000.00            50.00       17.50                    220.00
-	//   4    p2              250.00        1250.00            62.50       38.75                    250.00
-	//   5    p3              300.00        1071.43            75.00        0.00                    300.00
+	//   3    p1              220.00        1000.00            50.00       17.50                         -
+	//   4    p2              250.00        1250.00            62.50       38.75                         -
+	//   5    p3              300.00        1071.43            75.00        0.00                         -
 	// Wurde ein Farzeig mit dem Namen: "p3", und mit dem Id: 5 gelöscht
 	// Wurde ein Farzeig mit dem Namen: "p2", und mit dem Id: 4 gelöscht
 	// Wurde ein Farzeig mit dem Namen: "p1", und mit dem Id: 3 gelöscht
@@ -327,13 +328,98 @@ void vAufgabe_2() {
 	// Wurde ein Farzeig mit dem Namen: "f1", und mit dem Id: 0 gelöscht
 }
 
+void vAufgabe_2Cout() {
+	auto pFahrrad = std::make_unique<Fahrrad>("f1", 20);
+	auto pPKW = std::make_unique<PKW>("p1", 250, 6, 40);
+
+	Fahrzeug::vKopf();
+	std::cout << *pFahrrad << '\n' << *pPKW << '\n';
+
+	// Wurde ein Farzeig mit dem Namen: "f1", mit der maximalen Geschwindigkeit: 20, und mit dem Id: 0 erstellt
+	// Wurde ein Farzeig mit dem Namen: "p1", mit der maximalen Geschwindigkeit: 250, und mit dem Id: 1 erstellt
+	//  ID  Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
+	// ---------------------------------------------------------------------------------------------------
+	//   0    f1               20.00           0.00                -           -                     20.00
+	//   1    p1              250.00           0.00             0.00       20.00                         -
+	// Wurde ein Farzeig mit dem Namen: "p1", und mit dem Id: 1 gelöscht
+	// Wurde ein Farzeig mit dem Namen: "f1", und mit dem Id: 0 gelöscht
+}
+
+void vAufgabe_3() {
+    auto pFzg1 = std::make_unique<Fahrzeug>("Base", 120);
+    auto pPkw = std::make_unique<PKW>("BWM", 200, 8.5, 65);
+    auto pRad = std::make_unique<Fahrrad>("MTB", 25);
+
+    dGlobaleZeit = 2.0;
+    pFzg1->vSimulieren();
+    pPkw->vSimulieren();
+	pRad->vSimulieren();
+
+    std::cout << "1. Test: operator<< (Ausgabe mit <<)\n";
+    Fahrzeug::vKopf();
+    std::cout << *pFzg1 << '\n' << *pPkw << '\n' << *pRad << '\n';
+
+    std::cout << "2. Test: operator< (Sortierung nach Gesamtstrecke)\n";
+    std::vector<std::unique_ptr<Fahrzeug>> pVectorFahrzeuge;
+	pVectorFahrzeuge.push_back(std::move(pFzg1));
+    pVectorFahrzeuge.push_back(std::move(pPkw));
+    pVectorFahrzeuge.push_back(std::move(pRad)); 
+
+	for (auto& pFahrzeug : pVectorFahrzeuge) {
+        std::cout << pFahrzeug->sGetName() << " wurde mit " << pFahrzeug->dTanken() << " Litern betankt\n";
+    }
+    
+	dGlobaleZeit = 5.0;
+
+	for (auto& pFahrzeug : pVectorFahrzeuge) {
+		pFahrzeug->vSimulieren();
+    }
+
+    std::sort(pVectorFahrzeuge.begin(), pVectorFahrzeuge.end(),
+              [](const std::unique_ptr<Fahrzeug>& a, const std::unique_ptr<Fahrzeug>& b) {
+                  return *a < *b; 
+              });
+    Fahrzeug::vKopf();
+    for (auto& pFahrzeug : pVectorFahrzeuge) {
+        std::cout << *pFahrzeug << '\n';
+    }
+
+	// Fahrzeug f2 = *pFzg1; // function "Fahrzeug::Fahrzeug(const Fahrzeug &)" (declared at line 26 of ".../Aufgabenblock_1/Fahrzeug.h") cannot be referenced -- it is a deleted function
+	// *pFzg1 = *pPkw; // function "Fahrzeug::operator=(const Fahrzeug &)" (declared at line 45 of ".../Aufgabenblock_1/Fahrzeug.h") cannot be referenced -- it is a deleted function
+	// std::vector<Fahrzeug> vec = {*pFzg1, *pPkw}; // function "Fahrzeug::Fahrzeug(const Fahrzeug &)" (declared at line 26 of ".../Aufgabenblock_1/Fahrzeug.h") cannot be referenced -- it is a deleted function
+
+	// Wurde ein Farzeig mit dem Namen: "Base", mit der maximalen Geschwindigkeit: 120, und mit dem Id: 0 erstellt
+	// Wurde ein Farzeig mit dem Namen: "BWM", mit der maximalen Geschwindigkeit: 200, und mit dem Id: 1 erstellt
+	// Wurde ein Farzeig mit dem Namen: "MTB", mit der maximalen Geschwindigkeit: 25, und mit dem Id: 2 erstellt
+	// 1. Test: operator<< (Ausgabe mit <<)
+	//  ID  Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
+	// ---------------------------------------------------------------------------------------------------
+	//   0  Base              120.00         240.00
+	//   1   BWM              200.00         382.35            32.50        0.00                         -
+	//   2   MTB               25.00          50.00                -           -                     20.25
+	// 2. Test: operator< (Sortierung nach Gesamtstrecke)
+	// Base wurde mit 0.00 Litern betankt
+	// BWM wurde mit 65.00 Litern betankt
+	// MTB wurde mit 0.00 Litern betankt
+	//  ID  Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
+	// ---------------------------------------------------------------------------------------------------
+	//   2   MTB               25.00         110.75                -           -                     14.76
+	//   0  Base              120.00         600.00
+	//   1   BWM              200.00         982.35            83.50       14.00                         -
+	// Wurde ein Farzeig mit dem Namen: "BWM", und mit dem Id: 1 gelöscht
+	// Wurde ein Farzeig mit dem Namen: "Base", und mit dem Id: 0 gelöscht
+	// Wurde ein Farzeig mit dem Namen: "MTB", und mit dem Id: 2 gelöscht
+}
+
 int main() {
 
 	//vAufgabe_1();
 	//vAufgabe_1Tabelle();
 	//vAufgabe_1a();
+	//vAufgabe_2();
+	//vAufgabe_2Cout();
 
-	vAufgabe_2();
+	vAufgabe_3();
 
 	return 0;
 }

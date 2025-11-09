@@ -20,7 +20,7 @@ Fahrzeug::~Fahrzeug() {
     std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " gelöscht\n";
 }
 
-double Fahrzeug::dGeschwindigkeit() {
+double Fahrzeug::dGeschwindigkeit() const {
     return p_dMaxGeschwindigkeit; 
 }
 
@@ -37,8 +37,8 @@ void Fahrzeug::vKopf() {
     std::cout << std::string(3 + 6 + 20 + 15 + 17 + 12 + 26, '-') << "\n";
 }
 
-void Fahrzeug::vAusgeben() {
-    std::cout << std::right
+void Fahrzeug::vAusgeben(std::ostream& o) const {
+    o << std::right
               << std::setw(3)  << p_iID
               << std::setw(6) << p_sName
               << std::fixed << std::setprecision(2)
@@ -67,4 +67,13 @@ double Fahrzeug::dTanken(double) {
 
 std::string Fahrzeug::sGetName() {
     return p_sName;
+}
+
+std::ostream& operator<<(std::ostream& o, const Fahrzeug& f) {
+    f.vAusgeben(o);
+    return o;
+}
+
+bool Fahrzeug::operator<(const Fahrzeug& other) const {
+    return p_dGesamtStrecke < other.p_dGesamtStrecke;
 }

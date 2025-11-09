@@ -22,7 +22,7 @@ public:
 
     double dTanken(double dMenge = std::numeric_limits<double>::infinity()) override;
 
-    void vAusgeben() override;
+    void vAusgeben(std::ostream& o) const override;
 };
 
 #endif // PKW_H

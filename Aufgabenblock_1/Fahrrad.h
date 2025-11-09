@@ -1,6 +1,7 @@
 #ifndef FAHRRAD_H
 #define FAHRRAD_H
 
+#include <iostream>
 #include "Fahrzeug.h"
 
 class Fahrrad : public Fahrzeug {
@@ -10,9 +11,9 @@ public:
 
     void vSimulieren() override;
 
-    double dGeschwindigkeit() override;
+    double dGeschwindigkeit() const override;
 
-    void vAusgeben() override;
+    void vAusgeben(std::ostream& o) const override;
 };
 
 #endif // FAHRRAD_H

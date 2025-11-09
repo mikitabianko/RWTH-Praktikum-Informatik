@@ -40,7 +40,6 @@ void PKW::vSimulieren() {
         p_dTankinhalt -= dVerbrauchProSchritt;
         if (bIsGleich(p_dTankinhalt, dVerbrauchProSchritt, 1e-6)) p_dTankinhalt = 0.0;  // Reserve erlaubt letzte volle Fahrt
     } else if (p_dTankinhalt > 0.0) {
-
         double dMaxZeit = p_dTankinhalt / dVerbrauchProStunde; // [liter * h / liter] = [h]
 
         double dStrecke = dGeschwindigkeit * dMaxZeit;
@@ -51,11 +50,11 @@ void PKW::vSimulieren() {
     }
 }
 
-void PKW::vAusgeben() {
-    Fahrzeug::vAusgeben();
-    std::cout << std::right
+void PKW::vAusgeben(std::ostream& o) const {
+    Fahrzeug::vAusgeben(o);
+    o << std::right
               << std::fixed << std::setprecision(2)
               << std::setw(17) << p_dGesamtStrecke * p_dVerbrauch / 100
               << std::setw(12) << p_dTankinhalt
-              << std::setw(26) << dGeschwindigkeit();
+              << std::setw(26) << "-";
 }

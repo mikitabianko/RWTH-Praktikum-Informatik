@@ -57,6 +57,15 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "format": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "__tree": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "span": "cpp",
+        "unordered_set": "cpp",
+        "ranges": "cpp",
+        "text_encoding": "cpp"
     }
 }

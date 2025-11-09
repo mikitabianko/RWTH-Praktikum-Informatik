@@ -23,20 +23,28 @@ public:
 	Fahrzeug(std::string sName);
 	Fahrzeug(std::string sName, double dMaxGeschwindigkei);
 
+	Fahrzeug(const Fahrzeug&) = delete;
+
 	virtual ~Fahrzeug();
 
 	static void vKopf();
 
-	virtual void vAusgeben();
+	virtual void vAusgeben(std::ostream& o) const;
 
 	virtual void vSimulieren();
 
-	virtual double dGeschwindigkeit();
+	virtual double dGeschwindigkeit() const;
 
 	virtual double dTanken(double dMenge = std::numeric_limits<double>::infinity());
 
 	// Die Funktion wurde für die Funktion vAufgabe_2() erstellt und dient dazu, den Namen eines betankten Fahrzeugs anzuzeigen.
 	std::string sGetName();
+
+	bool operator<(const Fahrzeug& other) const;
+
+	Fahrzeug& operator=(const Fahrzeug&) = delete;
 };
+
+std::ostream& operator<<(std::ostream& o, const Fahrzeug& f);
 
 #endif
