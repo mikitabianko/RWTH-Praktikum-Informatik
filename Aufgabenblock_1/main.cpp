@@ -13,7 +13,8 @@
 #include "PKW.h"
 #include "Utils.h"
 
-double dGlobaleZeit = 0.0;
+double dGlobaleZeit;
+double dEpsilon = 1e-4;
 
 void vAufgabe_1() {
 	// Teil 1
@@ -137,6 +138,7 @@ void vAufgabe_1Tabelle() {
 }
 
 void vAufgabe_1a() {
+	dGlobaleZeit = 0.0;
 	const int iAnzahlFahrzeugen = 3;
 	
 	std::vector<std::unique_ptr<Fahrzeug>> pUniqueVectorFahrzeuge;
@@ -191,6 +193,8 @@ void vAufgabe_1a() {
 }
 
 void vAufgabe_2() {
+	dGlobaleZeit = 0.0;
+
 	int iFahrraederAnzahl;
 	std::cout << "Bitte geben Sie die Anzahl der Fahrraeder ein: ";
 	std::cin >> iFahrraederAnzahl;
@@ -226,7 +230,7 @@ void vAufgabe_2() {
 	const double dZeittaktwert = 0.5;
 	for (int i = 0; i < iAnzahlSimulationsschritte; ++i) {
 		dGlobaleZeit += dZeittaktwert;
-		if (bIsGleich(dGlobaleZeit, 3.0, 1e-6)) {
+		if (bIsGleich(dGlobaleZeit, 3.0, dEpsilon)) {
 			for (auto& pFahrzeug : pVectorFahrzeuge) {
 				std::cout << pFahrzeug->sGetName() << " wurde mit " << pFahrzeug->dTanken() << " Litern betankt\n";
 			}
@@ -346,8 +350,10 @@ void vAufgabe_2Cout() {
 }
 
 void vAufgabe_3() {
+	dGlobaleZeit = 0.0;
+
     auto pFzg1 = std::make_unique<Fahrzeug>("Base", 120);
-    auto pPkw = std::make_unique<PKW>("BWM", 200, 8.5, 65);
+    auto pPkw = std::make_unique<PKW>("BMW", 200, 8.5, 65);
     auto pRad = std::make_unique<Fahrrad>("MTB", 25);
 
     dGlobaleZeit = 2.0;
@@ -359,7 +365,6 @@ void vAufgabe_3() {
     Fahrzeug::vKopf();
     std::cout << *pFzg1 << '\n' << *pPkw << '\n' << *pRad << '\n';
 
-    std::cout << "2. Test: operator< (Sortierung nach Gesamtstrecke)\n";
     std::vector<std::unique_ptr<Fahrzeug>> pVectorFahrzeuge;
 	pVectorFahrzeuge.push_back(std::move(pFzg1));
     pVectorFahrzeuge.push_back(std::move(pPkw));
@@ -370,7 +375,13 @@ void vAufgabe_3() {
     }
     
 	dGlobaleZeit = 5.0;
+	Fahrzeug::vKopf();
+    for (auto& pFahrzeug : pVectorFahrzeuge) {
+        std::cout << *pFahrzeug << '\n'; 
+    }
 
+	std::cout << "2. Test: operator< (Sortierung nach Gesamtstrecke)\n";
+	
 	for (auto& pFahrzeug : pVectorFahrzeuge) {
 		pFahrzeug->vSimulieren();
     }
@@ -381,7 +392,7 @@ void vAufgabe_3() {
               });
     Fahrzeug::vKopf();
     for (auto& pFahrzeug : pVectorFahrzeuge) {
-        std::cout << *pFahrzeug << '\n';
+        std::cout << *pFahrzeug << '\n'; 
     }
 
 	// Fahrzeug f2 = *pFzg1; // function "Fahrzeug::Fahrzeug(const Fahrzeug &)" (declared at line 26 of ".../Aufgabenblock_1/Fahrzeug.h") cannot be referenced -- it is a deleted function
@@ -389,26 +400,52 @@ void vAufgabe_3() {
 	// std::vector<Fahrzeug> vec = {*pFzg1, *pPkw}; // function "Fahrzeug::Fahrzeug(const Fahrzeug &)" (declared at line 26 of ".../Aufgabenblock_1/Fahrzeug.h") cannot be referenced -- it is a deleted function
 
 	// Wurde ein Farzeig mit dem Namen: "Base", mit der maximalen Geschwindigkeit: 120, und mit dem Id: 0 erstellt
-	// Wurde ein Farzeig mit dem Namen: "BWM", mit der maximalen Geschwindigkeit: 200, und mit dem Id: 1 erstellt
+	// Wurde ein Farzeig mit dem Namen: "BMW", mit der maximalen Geschwindigkeit: 200, und mit dem Id: 1 erstellt
 	// Wurde ein Farzeig mit dem Namen: "MTB", mit der maximalen Geschwindigkeit: 25, und mit dem Id: 2 erstellt
 	// 1. Test: operator<< (Ausgabe mit <<)
-	//  ID  Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
-	// ---------------------------------------------------------------------------------------------------
-	//   0  Base              120.00         240.00
-	//   1   BWM              200.00         382.35            32.50        0.00                         -
-	//   2   MTB               25.00          50.00                -           -                     20.25
-	// 2. Test: operator< (Sortierung nach Gesamtstrecke)
+	//  ID           Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
+	// ------------------------------------------------------------------------------------------------------------
+	//   0           Base              120.00         240.00
+	//   1            BMW              200.00         400.00            34.00        0.00                         -
+	//   2            MTB               25.00          50.00                -           -                     20.25
 	// Base wurde mit 0.00 Litern betankt
-	// BWM wurde mit 65.00 Litern betankt
+	// BMW wurde mit 65.00 Litern betankt
 	// MTB wurde mit 0.00 Litern betankt
-	//  ID  Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
-	// ---------------------------------------------------------------------------------------------------
-	//   2   MTB               25.00         110.75                -           -                     14.76
-	//   0  Base              120.00         600.00
-	//   1   BWM              200.00         982.35            83.50       14.00                         -
-	// Wurde ein Farzeig mit dem Namen: "BWM", und mit dem Id: 1 gelöscht
+	//  ID           Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
+	// ------------------------------------------------------------------------------------------------------------
+	//   0           Base              120.00         240.00
+	//   1            BMW              200.00         400.00            34.00       65.00                         -
+	//   2            MTB               25.00          50.00                -           -                     20.25
+	// 2. Test: operator< (Sortierung nach Gesamtstrecke)
+	//  ID           Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
+	// ------------------------------------------------------------------------------------------------------------
+	//   2            MTB               25.00         110.75                -           -                     14.76
+	//   0           Base              120.00         600.00
+	//   1            BMW              200.00        1000.00            85.00       14.00                         -
+	// Wurde ein Farzeig mit dem Namen: "BMW", und mit dem Id: 1 gelöscht
 	// Wurde ein Farzeig mit dem Namen: "Base", und mit dem Id: 0 gelöscht
 	// Wurde ein Farzeig mit dem Namen: "MTB", und mit dem Id: 2 gelöscht
+}
+
+void vAufgabe_Probe() {
+    Fahrzeug* pF1 = new PKW("Audi", 150, 8);
+    dGlobaleZeit = 0.0;
+    Fahrzeug::vKopf();
+    dGlobaleZeit = 5.0;
+    std::cout << std::endl << "Globalezeit = " << dGlobaleZeit << std::endl;
+    pF1->vSimulieren();
+    std::cout << *pF1 << std::endl;
+    delete pF1;
+    char c;
+    std::cin >> c;
+
+	// Wurde ein Farzeig mit dem Namen: "Audi", mit der maximalen Geschwindigkeit: 150, und mit dem Id: 0 erstellt
+	//  ID           Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
+	// ------------------------------------------------------------------------------------------------------------
+
+	// Globalezeit = 5
+	//   0           Audi              150.00         750.00            60.00        0.00                         -
+	// Wurde ein Farzeig mit dem Namen: "Audi", und mit dem Id: 0 gelöscht
 }
 
 int main() {
@@ -419,7 +456,9 @@ int main() {
 	//vAufgabe_2();
 	//vAufgabe_2Cout();
 
-	vAufgabe_3();
+	//vAufgabe_3();
+
+	vAufgabe_Probe();
 
 	return 0;
 }

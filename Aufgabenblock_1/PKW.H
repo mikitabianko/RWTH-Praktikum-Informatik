@@ -16,7 +16,7 @@ private:
 
 public:
     PKW(std::string sName, double dMaxGeschwindigkeit,
-         double dVerbrauch, double dTankvolumen = 55);
+         double dVerbrauch, double bIsGleich = 55);
 
     void vSimulieren() override;
 

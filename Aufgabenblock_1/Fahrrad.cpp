@@ -20,7 +20,7 @@ void Fahrrad::vSimulieren() {
 void Fahrrad::vAusgeben(std::ostream& o) const {
     Fahrzeug::vAusgeben(o);
     double dAktuelGeschwindigkeit = dGeschwindigkeit();
-    o << std::right
+    o << std::resetiosflags(std::ios::left) << std::setiosflags(std::ios::right)
               << std::fixed << std::setprecision(2)
               << std::setw(17) << "-"
               << std::setw(12) << "-"
