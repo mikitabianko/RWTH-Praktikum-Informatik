@@ -3,7 +3,7 @@
  *
  *  Created on: 18 Oct 2025
  *      Author: mikitabianko
- * 	Repo: https://github.com/mikitabianko/RWTH-Praktikum-Informatik/tree/Aufgabenblock_1
+ * 	Repo: https://github.com/mikitabianko/RWTH-Praktikum-Informatik/
  */
 #include <iostream>
 #include <algorithm>
@@ -13,8 +13,8 @@
 #include "PKW.h"
 #include "Utils.h"
 
-double dGlobaleZeit;
-double dEpsilon = 1e-4;
+// double dGlobaleZeit;
+// double dEpsilon = 1e-4;
 
 void vAufgabe_1() {
 	// Teil 1
@@ -128,13 +128,20 @@ void vAufgabe_1() {
 	}
 }
 
-void vAufgabe_1Tabelle() {
-	Fahrzeug f("test", 5.6);
+void vTestTabelle() {
+	Fahrzeug* f = new Fahrzeug("test", 5.6);
+	
+    Fahrzeug::vKopf();
+	f->vAusgeben(std::cout);
+	std::cout << '\n';
 
-	Fahrzeug::vKopf();
-	std::cout << "\n";
-	f.vAusgeben(std::cout);
-	std::cout << "\n";
+    delete f;
+
+	// Wurde ein Farzeig mit dem Namen: "test", mit der maximalen Geschwindigkeit: 5.6, und mit dem Id: 0 erstellt
+	//  ID           Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
+	// ------------------------------------------------------------------------------------------------------------
+	//   0           test                5.60           0.00
+	// Wurde ein Farzeig mit dem Namen: "test", und mit dem Id: 0 gelöscht
 }
 
 void vAufgabe_1a() {
@@ -448,17 +455,56 @@ void vAufgabe_Probe() {
 	// Wurde ein Farzeig mit dem Namen: "Audi", und mit dem Id: 0 gelöscht
 }
 
+using namespace std;
+double dGlobaleZeit;
+double dEpsilon = 0.001;
+
+void vAufgabe_AB1() {
+
+    int l = 0; // Laufindex für gezielte AUsgabe
+    vector<int> ausgabe{15};
+    double dTakt = 0.3;
+
+    std::vector<unique_ptr<Fahrzeug>> vecFahrzeuge;
+    vecFahrzeuge.push_back(make_unique <PKW>("Audi", 217, 10.7));
+    vecFahrzeuge.push_back(make_unique <Fahrrad>("BMX", 21.4));
+    for (dGlobaleZeit = 0; dGlobaleZeit < 6; dGlobaleZeit += dTakt)
+    {
+        auto itL = find(ausgabe.begin(), ausgabe.end(), l);
+        if (itL != ausgabe.end()) {
+            std::cout << std::endl << l <<  " Globalezeit = " << dGlobaleZeit << std::endl;
+            Fahrzeug::vKopf();
+        }
+
+        for (int i = 0; i < (int) vecFahrzeuge.size(); i++)
+        {
+            vecFahrzeuge[i]->vSimulieren();
+            if (fabs(dGlobaleZeit - 3.0) < dTakt/2)
+            {
+                vecFahrzeuge[i]->dTanken();
+            }
+            if (itL != ausgabe.end()) {
+                std::cout << *vecFahrzeuge[i] << endl;
+            }
+        }
+        l++;
+    }
+    char c;
+    std::cin >> c;
+}
+
 int main() {
 
 	//vAufgabe_1();
-	//vAufgabe_1Tabelle();
+	//vTestTabelle();
 	//vAufgabe_1a();
 	//vAufgabe_2();
 	//vAufgabe_2Cout();
 
 	//vAufgabe_3();
 
-	vAufgabe_Probe();
+	//vAufgabe_Probe();
+	vAufgabe_AB1();
 
 	return 0;
 }

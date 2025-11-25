@@ -3,4 +3,5 @@
 
 extern double dGlobaleZeit;
 extern double dEpsilon;
+
 #endif
