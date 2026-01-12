@@ -169,6 +169,8 @@ void vAufgabe_1a() {
 		for (auto& pFahrzeug : pUniqueVectorFahrzeuge) {
 			pFahrzeug->vSimulieren();
 			pFahrzeug->vAusgeben(std::cout);
+
+			std::cout << " " << dGlobaleZeit;
 			std::cout << "\n";
 		}
 	}
@@ -226,9 +228,9 @@ void vAufgabe_2() {
 		std::string sName;
 		double dMaxGeschwindigkeit, dVerbrauch, dTankvolumen;
 		std::cout << "PKW " << (i+1) << ": Bitte Name, maximale Geschwindigkeit, Verbrauch und Tankvolumen eingeben: ";
-		std::cin >> sName >> dMaxGeschwindigkeit >> dVerbrauch >> dTankvolumen;
+		std::cin >> sName >> dMaxGeschwindigkeit >> dVerbrauch;// >> dTankvolumen;
 
-		pVectorFahrzeuge.push_back(std::make_unique<PKW>(sName, dMaxGeschwindigkeit, dVerbrauch, dTankvolumen));
+		pVectorFahrzeuge.push_back(std::make_unique<PKW>(sName, dMaxGeschwindigkeit, dVerbrauch));
 	}
 
 	Fahrzeug::vKopf();
@@ -245,7 +247,7 @@ void vAufgabe_2() {
 		for (auto& pFahrzeug : pVectorFahrzeuge) {
 			pFahrzeug->vSimulieren();
 			pFahrzeug->vAusgeben(std::cout);
-			std::cout << "\n";
+			std::cout << " " << dGlobaleZeit << "\n";
 		}
 	}
 
@@ -402,6 +404,26 @@ void vAufgabe_3() {
         std::cout << *pFahrzeug << '\n'; 
     }
 
+	// 3. Test: operator= (Zuweisung von Stammdaten)
+    std::cout << "3. Test: operator= (Zuweisung von Stammdaten, z. B. MaxGeschwindigkeit)\n";
+    
+    // Zwei temporäre Fahrzeuge erstellen (stack-basiert, da unique_ptr nicht notwendig für Demo)
+    Fahrzeug f1("Fahrzeug1", 100.0);
+    Fahrzeug f2("Fahrzeug2", 200.0);
+    
+    // Vor der Zuweisung ausgeben
+    std::cout << "Vor Zuweisung:\n";
+    Fahrzeug::vKopf();
+    std::cout << f1 << '\n' << f2 << '\n';
+    
+    // Zuweisung: f2 = f1 (kopiert nur MaxGeschwindigkeit, ID und Name bleiben bei f2 erhalten)
+    f2 = f1;
+    
+    // Nach der Zuweisung ausgeben
+    std::cout << "Nach Zuweisung (f2 = f1):\n";
+    Fahrzeug::vKopf();
+    std::cout << f1 << '\n' << f2 << '\n';
+
 	// Fahrzeug f2 = *pFzg1; // function "Fahrzeug::Fahrzeug(const Fahrzeug &)" (declared at line 26 of ".../Aufgabenblock_1/Fahrzeug.h") cannot be referenced -- it is a deleted function
 	// *pFzg1 = *pPkw; // function "Fahrzeug::operator=(const Fahrzeug &)" (declared at line 45 of ".../Aufgabenblock_1/Fahrzeug.h") cannot be referenced -- it is a deleted function
 	// std::vector<Fahrzeug> vec = {*pFzg1, *pPkw}; // function "Fahrzeug::Fahrzeug(const Fahrzeug &)" (declared at line 26 of ".../Aufgabenblock_1/Fahrzeug.h") cannot be referenced -- it is a deleted function
@@ -429,6 +451,21 @@ void vAufgabe_3() {
 	//   2            MTB               25.00         110.75                -           -                     14.76
 	//   0           Base              120.00         600.00
 	//   1            BMW              200.00        1000.00            85.00       14.00                         -
+	// 3. Test: operator= (Zuweisung von Stammdaten, z. B. MaxGeschwindigkeit)
+	// Wurde ein Farzeig mit dem Namen: "Fahrzeug1", mit der maximalen Geschwindigkeit: 100.00, und mit dem Id: 3 erstellt
+	// Wurde ein Farzeig mit dem Namen: "Fahrzeug2", mit der maximalen Geschwindigkeit: 200.00, und mit dem Id: 4 erstellt
+	// Vor Zuweisung:
+	//  ID           Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
+	// ------------------------------------------------------------------------------------------------------------
+	//   3      Fahrzeug1              100.00           0.00
+	//   4      Fahrzeug2              200.00           0.00
+	// Nach Zuweisung (f2 = f1):
+	//  ID           Name  MaxGeschwindigkeit  GesamtStrecke  Gesamtverbrauch  Tankinhalt  Aktuelle Geschwindigkeit
+	// ------------------------------------------------------------------------------------------------------------
+	//   3      Fahrzeug1              100.00           0.00
+	//   4      Fahrzeug2              100.00           0.00
+	// Wurde ein Farzeig mit dem Namen: "Fahrzeug2", und mit dem Id: 4 gelöscht
+	// Wurde ein Farzeig mit dem Namen: "Fahrzeug1", und mit dem Id: 3 gelöscht
 	// Wurde ein Farzeig mit dem Namen: "BMW", und mit dem Id: 1 gelöscht
 	// Wurde ein Farzeig mit dem Namen: "Base", und mit dem Id: 0 gelöscht
 	// Wurde ein Farzeig mit dem Namen: "MTB", und mit dem Id: 2 gelöscht
@@ -501,10 +538,10 @@ int main() {
 	//vAufgabe_2();
 	//vAufgabe_2Cout();
 
-	//vAufgabe_3();
+	vAufgabe_3();
 
 	//vAufgabe_Probe();
-	vAufgabe_AB1();
+	//vAufgabe_AB1();
 
 	return 0;
 }

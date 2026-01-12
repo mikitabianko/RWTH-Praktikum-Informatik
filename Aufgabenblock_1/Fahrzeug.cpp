@@ -77,3 +77,13 @@ std::ostream& operator<<(std::ostream& o, const Fahrzeug& f) {
 bool Fahrzeug::operator<(const Fahrzeug& other) const {
     return p_dGesamtStrecke < other.p_dGesamtStrecke;
 }
+
+Fahrzeug& Fahrzeug::operator=(const Fahrzeug& other) {
+    if (this == &other) {
+        return *this;
+    }
+    // Nur Stammdaten kopieren: p_dMaxGeschwindigkeit (p_sName und p_iID sind const und können nicht geändert werden)
+    this->p_dMaxGeschwindigkeit = other.p_dMaxGeschwindigkeit;
+    // Dynamische Daten (z. B. p_dGesamtStrecke) werden NICHT kopiert, da nur Stammdaten
+    return *this;
+}

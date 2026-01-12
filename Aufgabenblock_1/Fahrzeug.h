@@ -42,7 +42,7 @@ public:
 
 	bool operator<(const Fahrzeug& other) const;
 
-	Fahrzeug& operator=(const Fahrzeug&) = delete;
+	Fahrzeug& operator=(const Fahrzeug&); //= delete;
 };
 
 std::ostream& operator<<(std::ostream& o, const Fahrzeug& f);
