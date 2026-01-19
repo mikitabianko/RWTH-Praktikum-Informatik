@@ -92,6 +92,31 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
 - [x] 1. Erzeugen Sie ein neues leeres Projekt mit dem Namen Aufgabenblock_2. Kopieren Sie alle Sourcen (nur *.h und *.cpp Dateien) aus Aufgabenblock_1 und machen Sie diese Dateien dem neuen Projekt bekannt (s. Kapitel 3.2.3).
 - [x] 2. Ändern Sie den C++-Dialekt Ihres Projektes auf C++17. Dazu klicken Sie mit der rechten Maustaste auf Ihr Projekt und wählen "Properties" aus. Hier wählen Sie nun "_C/C++ Build -> Settings_" aus. Auf der rechten Seite wählen Sie nun den Reiter "Tool Settings". Hier öffnen Sie nun "_GCC C++ Compiler -> Dialect_". Im rechten Bereich wählen Sie nun unter "Language standard" "ISO C++ 17 (-std=c++17)".
 
+## 5.3 Simulationsobjekte und Wege
+
+- [ ] 1. Als erstes soll eine neue abstrakte Oberklasse _Simulationsobjekt_ geschaffen werden, welche die gemeinsamen Eigenschaften von _Fahrzeug_ und einer neuen Klasse _Weg_ zusammenfasst. Fahrzeuge und Wege sind Simulationsobjekte, die einen Namen, eine ID und eine lokale Zeit besitzen. Sie können simuliert und ausgegeben werden. Integrieren Sie _Fahrzeug_ in diese neue Klassenhierarchie, indem Sie die Variablen für Name, ID und Simulationszeit sowie alle Funktionen zur gemeinsamen Nutzung von _Fahrzeug_ und _Weg_ aus der Klasse _Fahrzeug_ in die Klasse _Simulationsobjekt_ übertragen. Verschieben Sie die Ausgabe im Destruktor in die neue Klasse, um weiterhin das richtige Löschen der Objekte kontrollieren zu können. Löschen Sie die jetzt überflüssigen Variablen und Funktionen in _Fahrzeug_.
+   
+   Beachten Sie, dass die Variablen und Methoden in _Fahrzeug_ angepasst bzw. gelöscht werden müssen. _Simulationsobjekt_ ist eine abstrakte Klasse, besitzt also mindestens eine rein virtuelle Methode. Überlegen Sie, welche Funktion hierzu am besten geeignet ist. Welche Methoden/Variablen müssen _private_, _protected_ oder _public_ deklariert werden? Gibt es weitere Methoden, die virtuell oder rein virtuell deklariert werden können oder müssen? Verbieten Sie auch hier den Copy-Konstruktor, um fehlerhafte Elemente durch Kopien zu vermeiden. Wie müssen Sie den Zuweisungsoperator anpassen? Implementieren Sie einen Vergleichsoperator (`operator==()`), der genau dann _true_ liefert, wenn die IDs übereinstimmen.
+   
+   Um Codeduplizierung zu vermeiden, sollen bei der Ausgabe die entsprechenden vAusgeben-Methoden der übergeordneten Klassen mitbenutzt werden. So soll etwa vAusgeben in _Fahrrad_ zunächst die Methode von _Fahrzeug_ aufrufen, diese zunächst die Methode von _Simulationsobjekt_. `Simulationsobjekt::vAusgeben` soll nur die ID und den Namen des Objekts ausgeben. Aufgrund dieses Aufbaus reicht es für den Ausgabeoperator aus, diesen nur in der Klasse _Simulationsobjekt_ zu definieren. Dieses Prinzip gilt auch für die Konstruktoren: Die Konstruktoren sollten jeweils die passenden Konstruktoren der Oberklasse aufrufen und nur die eigenen Variablen der Klasse setzen. Der Aufruf des Konstruktors der Oberklasse erfolgt in einer Initialisierungsliste.
+   
+- [ ] 2. Richten Sie die Klasse _Weg_ als Unterklasse von _Simulationsobjekt_ ein. Wege haben zusätzlich zu den geerbten Eigenschaften eine Länge in km (`p_dLaenge`), eine Liste von Fahrzeugen (`p_pFahrzeuge`), welche sich aktuell auf dem Weg befinden, und eine maximal zulässige Geschwindigkeit (`p_eTempolimit`). Die Liste beinhaltet `unique_ptr` auf Fahrzeuge. Zur Implementierung der Liste benutzen Sie den Container _list_ aus der _STL_.
+   
+   Es soll für Wege drei unterschiedliche Kategorien (Innerorts, Landstraße und Autobahn) mit unterschiedlichem Tempolimit ($50 km/h$, $100 km/h$ und Unbegrenzt) geben. Für die Autobahngeschwindigkeit können Sie die Konstante `std::numeric_limits<int>::max()` verwenden. Definieren Sie dazu in Tempolimit.h einen eigenen Datentyp _Tempolimit_ als Aufzählungsklasse (_enum class_) und eine Konvertierungsfunktion `getTempolimit` in _Weg_, die für `p_eTempolimit` die entsprechende Geschwindigkeit als _double_ zurückgibt.
+   
+   _Weg_ soll einen Standardkonstruktor und einen Konstruktor mit Namen und Länge des Weges, sowie optionalem Tempolimit (default unbegrenzt) als Parameter haben. Außerdem soll die Funktion `vSimulieren()` so implementiert werden, dass beim Aufruf alle auf dem Weg befindlichen Fahrzeuge simuliert werden. Setzen Sie hierzu eine Range-basierte Schleife ein, die über die gesamte _list_ iteriert.
+   
+   **Beachte:** Wenn zwei Klassen jeweils Variablen der anderen als Element enthalten (hier enthält ein Weg Instanzen der Klasse Fahrzeug), können Sie nicht in beiden Headerdateien jeweils die andere Headerdatei inkludieren, da dies zu einer Rekursion führen würde. Es reicht, in den Headerdateien jeweils die andere Klasse zu deklarieren, also einfach `class Fahrzeug;` bzw. `class Weg;` einzufügen. In den cpp-Dateien müssen aber dann die entsprechenden Headerdateien eingebunden werden, da dort die Methoden benötigt werden. Um allgemein Probleme mit zirkulären Abhängigkeiten (circular dependencies) in Headerdateien zu vermeiden, kann man meistens folgende Faustregel anwenden: Nur, wenn von einer Klasse geerbt wird, ist es notwendig die andere Header-Datei in der Header-Datei einzubinden. Bei allen anderen Klassen reicht in der Headerdatei eine Deklaration. Für cpp-Dateien gilt das nicht: Dort müssen alle benutzten Headerdateien eingebunden werden, um die Schnittstellen der Funktionen bereitzustellen.
+   
+   Implementieren Sie eine Funktion `vAusgeben` für _Weg_, damit der überladene Ausgabeoperator verwendet werden kann. Die Funktion soll die Implementierung von _Simulationsobjekt_ für ID und Name verwenden und selbst die Länge des Weges und in Klammern die Namen der auf dem Weg befindlichen Fahrzeuge ausgeben. Definieren Sie auch hier eine Klassenfunktion `vKopf()` zur Ausgabe einer Überschrift für Wege wie folgt:
+    ```
+    ID | Name           | Laenge  | Fahrzeuge
+    -------------------------------------------
+     0 weg              :    100  ( )
+    ```
+    
+- [ ] 3. Testen Sie Ihr altes Hauptprogramm. Es sollte noch unverändert funktionieren. In `vAufgabe_4()` testen Sie zusätzlich die neue Klasse _Weg_, indem Sie einen Weg erzeugen und ihn mit dem `<<`-Operator auf die Standardausgabe ausgeben.
+
 ---
 
 In this project, all function outputs are written as comments at the end of the functions.
