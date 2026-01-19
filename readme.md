@@ -62,3 +62,36 @@ In diesem Aufgabenblock werden folgende Punkte betrachtet:
 4. Überladen Sie in der Klasse Fahrzeug den Vergleichsoperator operator<(). Dieser soll den Wert true liefern, falls die bisher zurückgelegte Gesamtstrecke vom aktuellen Objekt kleiner als die vom Vergleichsobjekt ist.
 5. Verbieten Sie den Copy-Konstruktor, benutzen Sie hierzu delete. Überdenken Sie, wieso dies sinnvoll ist. Wo wird er implizit aufgerufen? Was bedeutet dies in diesem Szenario? Definieren Sie den Zuweisungsoperator (operator=()), so dass nur die Stammdaten (Daten die bei der Erstellung festgelegt werden) kopiert werden. Können Sie alle Daten kopieren? Was müssen Sie bei der ID beachten? Was würde passieren, wenn Sie keine eigene Definition des Operators erstellen würden? Was passiert, wenn Sie Elemente der Unterklasse zuweisen? Machen Sie sich den Unterschied zwischen Copy-Konstruktor und Zuweisungsoperator klar. Es geht hier nur um das prinzipielle Verständnis der Funktion des Zuweisungsoperators. Die genaue Implementierung des Zuweisungsoperators spielt für die weitere Aufgabe keine Rolle.
 6. Testen Sie alle in dieser Aufgabe neu erstellten Operatoren in einer Funktion vAufgabe_3().
+
+# Aufgabenblock 2
+## 5.1 Motivation
+
+In diesem Aufgabenblock werden folgende Punkte betrachtet:
+
+- Erweiterung einer Klassenhierarchie,
+- abstrakte Klassen und rein virtuelle Methoden,
+- Aufzählungsklasse,
+- Unterscheidung und Nutzung `unique_ptr`, `shared_ptr`, `weak_ptr`,
+- Templateklassen nutzen und erstellen,
+- Exception handling und eigene Exceptionklassen,
+- Nutzung einer externen Bibliothek,
+- Erzeugung gleichverteilter Zufallszahlen.
+
+In diesem zweiten Aufgabenblock wird die Klassenhierarchie um eine Klasse _Weg_ erweitert. Da diese Klasse einige Eigenschaften mit Fahrzeugen gemeinsam hat (Name, Simulationszeit, Simulationsfunktion, Ausgabefunktion usw.), ist es sinnvoll, die Klassenhierarchie um eine abstrakte Oberklasse zu erweitern und sowohl _Weg_, als auch _Fahrzeug_ von dieser Klasse abzuleiten. Die gemeinsamen Dienste werden dann in diese abstrakte Oberklasse verlagert. Beim letzten Aufgabenpunkt wird noch eine Klasse _Kreuzung_ eingeführt, die ebenfalls von der abstrakten Oberklasse abzuleiten ist. Dies ist eine bei objektorientierten Programmierung häufig auftretende Situation.
+
+Ein Weg verwaltet eine Liste von Fahrzeugen und kann simuliert werden, indem alle auf dem Weg befindlichen Fahrzeuge simuliert werden.
+
+Für die Berechnung der Strecke, die ein Fahrzeug in einem Simulationsschritt zurücklegt, wird eine neue Klasse erstellt, die ein Verhaltensmuster implementiert. Ein Verhaltensmuster ist ein Beispiel von einem Entwurfsmuster (_design pattern_). Jedes Fahrzeug besitzt eine Instanz dieser Klasse und kann in seinem Simulationsschritt diese Instanz fragen, wie weit es fahren darf. Auftretende Sondersituationen (parkendes Fahrzeug fährt los, fahrendes Fahrzeug kommt am Ende des Weges an) werden durch Ausnahmebehandlung (Exceptions) abgehandelt. Um die Simulation etwas anschaulicher zu machen, wird eine Bibliothek mit Funktionen zur grafischen Darstellung verwendet.
+
+Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allgemein beschrieben werden. Die _STL_ stellt eine Fülle solcher vorgefertigten Strukturen bereit. Einige davon sollen hier benutzt werden. Schließlich soll für eine spezielle Listenart (verzögerte Aktualisierung) ein eigenes Template erstellt werden.
+
+**Um sich einen Überblick zu verschaffen, lesen Sie den zweiten Aufgabenblock zunächst komplett durch.**
+
+## 5.2 Kopieren des Projektes
+
+- [x] 1. Erzeugen Sie ein neues leeres Projekt mit dem Namen Aufgabenblock_2. Kopieren Sie alle Sourcen (nur *.h und *.cpp Dateien) aus Aufgabenblock_1 und machen Sie diese Dateien dem neuen Projekt bekannt (s. Kapitel 3.2.3).
+- [x] 2. Ändern Sie den C++-Dialekt Ihres Projektes auf C++17. Dazu klicken Sie mit der rechten Maustaste auf Ihr Projekt und wählen "Properties" aus. Hier wählen Sie nun "_C/C++ Build -> Settings_" aus. Auf der rechten Seite wählen Sie nun den Reiter "Tool Settings". Hier öffnen Sie nun "_GCC C++ Compiler -> Dialect_". Im rechten Bereich wählen Sie nun unter "Language standard" "ISO C++ 17 (-std=c++17)".
+
+---
+
+In this project, all function outputs are written as comments at the end of the functions.
