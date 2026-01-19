@@ -12,6 +12,7 @@
 #include "Fahrrad.h"
 #include "PKW.h"
 #include "Utils.h"
+#include "Weg.h"
 
 // double dGlobaleZeit;
 // double dEpsilon = 1e-4;
@@ -530,18 +531,31 @@ void vAufgabe_AB1() {
     std::cin >> c;
 }
 
+void vAufgabe_4() {
+	std::cout << "\nTest der Klasse Weg:\n";
+    Weg w1("Testweg", 100.0, Tempolimit::Landstrasse);
+    Weg w2("Testweg2", 500.0, Tempolimit::Autobahn);
+	Weg w3("weg", 50.0, Tempolimit::Innerorts);
+	Weg::vKopf();  
+    std::cout << w1 << std::endl;
+	std::cout << w2 << std::endl;
+	std::cout << w3 << std::endl;
+}
+
 int main() {
 
-	//vAufgabe_1();
-	//vTestTabelle();
-	//vAufgabe_1a();
-	//vAufgabe_2();
-	//vAufgabe_2Cout();
+	// vAufgabe_1();
+	// vTestTabelle();
+	// vAufgabe_1a();
+	// vAufgabe_2();
+	// vAufgabe_2Cout();
 
-	vAufgabe_3();
+	// vAufgabe_3();
 
-	//vAufgabe_Probe();
-	//vAufgabe_AB1();
+	// vAufgabe_Probe();
+	// vAufgabe_AB1();
+
+	vAufgabe_4();
 
 	return 0;
 }

@@ -1,23 +1,13 @@
 #include "Fahrzeug.h"
 
-Fahrzeug::Fahrzeug() : p_sName(""), p_iID(p_iMaxID) {
-    ++p_iMaxID;
-    std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " erstellt\n";
+Fahrzeug::Fahrzeug() : Simulationsobjekt() {
 }
-Fahrzeug::Fahrzeug(std::string sName) : p_sName(sName), p_iID(p_iMaxID) {
-    ++p_iMaxID;
-    std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " erstellt\n";
+Fahrzeug::Fahrzeug(std::string sName) : Simulationsobjekt(sName) {
 }
 
-Fahrzeug::Fahrzeug(std::string sName, double dMaxGeschwindigkei) : p_sName(sName), p_iID(p_iMaxID), p_dMaxGeschwindigkeit(dMaxGeschwindigkei) {
-    (dMaxGeschwindigkei <= 0) ? throw std::invalid_argument("Maximale Geschwindigkei muss positiv sein!") : nullptr;
-    ++p_iMaxID;
-    std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", mit der maximalen Geschwindigkeit: " << p_dMaxGeschwindigkeit 
-        << ", und mit dem Id: " << p_iID << " erstellt\n";
-}
-
-Fahrzeug::~Fahrzeug() {
-    std::cout << "Wurde ein Farzeig mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " gelöscht\n";
+Fahrzeug::Fahrzeug(std::string sName, double dMaxGeschwindigkeit) 
+    : Simulationsobjekt(sName), p_dMaxGeschwindigkeit(dMaxGeschwindigkeit) {
+    (dMaxGeschwindigkeit <= 0) ? throw std::invalid_argument("Maximale Geschwindigkei muss positiv sein!") : nullptr;
 }
 
 double Fahrzeug::dGeschwindigkeit() const {
@@ -38,12 +28,10 @@ void Fahrzeug::vKopf() {
 }
 
 void Fahrzeug::vAusgeben(std::ostream& o) const {
-    o << std::resetiosflags(std::ios::left) << std::setiosflags(std::ios::right)
-              << std::setw(3)  << p_iID
-              << std::setw(15) << p_sName
-              << std::fixed << std::setprecision(2)
-              << std::setw(20) << p_dMaxGeschwindigkeit
-              << std::setw(15) << p_dGesamtStrecke;
+    Simulationsobjekt::vAusgeben(o);
+    o << std::fixed << std::setprecision(2)
+      << std::setw(20) << p_dMaxGeschwindigkeit
+      << std::setw(15) << p_dGesamtStrecke;
 }
 
 void Fahrzeug::vSimulieren() {
@@ -65,10 +53,6 @@ double Fahrzeug::dTanken(double) {
     return 0.0;  // Fahrzeuge ohne Tank tanken nicht
 }
 
-std::string Fahrzeug::sGetName() {
-    return p_sName;
-}
-
 std::ostream& operator<<(std::ostream& o, const Fahrzeug& f) {
     f.vAusgeben(o);
     return o;
@@ -84,6 +68,5 @@ Fahrzeug& Fahrzeug::operator=(const Fahrzeug& other) {
     }
     // Nur Stammdaten kopieren: p_dMaxGeschwindigkeit (p_sName und p_iID sind const und können nicht geändert werden)
     this->p_dMaxGeschwindigkeit = other.p_dMaxGeschwindigkeit;
-    // Dynamische Daten (z. B. p_dGesamtStrecke) werden NICHT kopiert, da nur Stammdaten
     return *this;
 }
