@@ -30,8 +30,8 @@ bool Simulationsobjekt::operator==(const Simulationsobjekt& other) const {
 
 void Simulationsobjekt::vAusgeben(std::ostream& o) const {
     o << std::resetiosflags(std::ios::left) << std::setiosflags(std::ios::right)
-      << std::setw(6) << p_iID
-      << std::setw(15) << p_sName;
+      << std::setw(3) << p_iID
+      << std::setw(18) << p_sName;
 }
 
 std::ostream& operator<<(std::ostream& o, const Simulationsobjekt& obj) {

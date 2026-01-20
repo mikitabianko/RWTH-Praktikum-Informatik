@@ -1,4 +1,6 @@
 #include "Fahrzeug.h"
+#include "Verhalten.h"
+#include "Weg.h"
 
 Fahrzeug::Fahrzeug() : Simulationsobjekt() {
 }
@@ -14,35 +16,48 @@ double Fahrzeug::dGeschwindigkeit() const {
     return p_dMaxGeschwindigkeit; 
 }
 
+Fahrzeug::~Fahrzeug() = default;
+
 void Fahrzeug::vKopf() {
     std::cout << std::resetiosflags(std::ios::left) << std::setiosflags(std::ios::right)
               << std::setw(3)  << "ID"
-              << std::setw(15) << "Name"
-              << std::setw(20) << "MaxGeschwindigkeit"
-              << std::setw(15) << "GesamtStrecke"
-              << std::setw(17) << "Gesamtverbrauch"
-              << std::setw(12) << "Tankinhalt"
-              << std::setw(26) << "Aktuelle Geschwindigkeit" 
+              << " | " << std::setw(15) << "Name"
+              << " | " << std::setw(20) << "MaxGeschwindigkeit"
+              << " | " << std::setw(15) << "GesamtStrecke"
+              << " | " << std::setw(20) << "AbschnittStrecke"
+              << " | " << std::setw(17) << "Gesamtverbrauch"
+              << " | " << std::setw(12) << "Tankinhalt"
+              << " | " << std::setw(26) << "Aktuelle Geschwindigkeit" 
               << "\n";
-    std::cout << std::string(3 + 15 + 20 + 15 + 17 + 12 + 26, '-') << "\n";
+    std::cout << std::string(3 + 15 + 20 + 15 + 20 + 17 + 12 + 26 + 3 * 7, '-') << "\n";
 }
 
 void Fahrzeug::vAusgeben(std::ostream& o) const {
     Simulationsobjekt::vAusgeben(o);
     o << std::fixed << std::setprecision(2)
-      << std::setw(20) << p_dMaxGeschwindigkeit
-      << std::setw(15) << p_dGesamtStrecke;
+      << std::setw(23) << p_dMaxGeschwindigkeit
+      << std::setw(18) << p_dGesamtStrecke
+      << std::setw(23) << p_dAbschnittStrecke;
 }
 
 void Fahrzeug::vSimulieren() {
+    if (!p_pVerhalten) return;
+
     double dZeitDiff = dGlobaleZeit - p_dZeit;
 
     if (dZeitDiff <= 0.0) return; 
 
-    double dAktGeschw = dGeschwindigkeit();
-    double dStrecke = dAktGeschw * dZeitDiff; 
+    double dStrecke = p_pVerhalten->dStrecke(*this, dZeitDiff);
 
+    // double dAktGeschw = dGeschwindigkeit();
+    // double dStrecke = dAktGeschw * dZeitDiff; 
+
+    if (std::fabs(dStrecke) <= dEpsilon && std::fabs(p_dAbschnittStrecke - p_pVerhalten->getWeg().dGetLaenge()) <= dEpsilon) {
+        std::cout << "Fahrzeug \"" << sGetName() << "\" hat das Ende des Weges \"" << p_pVerhalten->getWeg().sGetName() << "\" erreicht." << std::endl;
+    }
+    
     p_dGesamtStrecke += dStrecke;
+    p_dAbschnittStrecke += dStrecke;
 
     p_dGesamtZeit += dZeitDiff;
 
@@ -69,4 +84,13 @@ Fahrzeug& Fahrzeug::operator=(const Fahrzeug& other) {
     // Nur Stammdaten kopieren: p_dMaxGeschwindigkeit (p_sName und p_iID sind const und können nicht geändert werden)
     this->p_dMaxGeschwindigkeit = other.p_dMaxGeschwindigkeit;
     return *this;
+}
+
+void Fahrzeug::vNeueStrecke(Weg& weg) {
+    p_pVerhalten = std::make_unique<Verhalten>(weg);
+    p_dAbschnittStrecke = 0.0;
+}
+
+double Fahrzeug::dGetAbschnittStrecke() const {
+    return p_dAbschnittStrecke;
 }

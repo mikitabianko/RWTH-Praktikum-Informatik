@@ -11,7 +11,11 @@ Weg::Weg(std::string sName, double dLaenge, Tempolimit eTempolimit)
     }
 }
 
-double Weg::getTempolimit() const {
+double Weg::dGetLaenge() const {
+    return p_dLaenge;
+}
+
+double Weg::dGetTempolimit() const {
     switch (p_eTempolimit) {
         case Tempolimit::Innerorts:
             return 50.0;
@@ -46,11 +50,15 @@ void Weg::vAusgeben(std::ostream& o) const {
     o << " : " << std::fixed << std::setprecision(2) << std::setw(7) << p_dLaenge << " (";
     bool bFirst = true;
     for (const auto& pFahrzeug : p_pFahrzeuge) {
-        if (!bFirst) {
-            o << ", ";
-        }
+        if (!bFirst) o << " ";
         o << pFahrzeug->sGetName();
         bFirst = false;
     }
     o << ")";
+}
+
+void Weg::vAnnahme(std::unique_ptr<Fahrzeug> aFzg) {
+    if (!aFzg) return; 
+    p_pFahrzeuge.push_back(std::move(aFzg));
+    p_pFahrzeuge.back()->vNeueStrecke(*this);
 }

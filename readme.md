@@ -124,7 +124,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
 
 ## 5.4 Parkende und fahrende Fahrzeuge
 
-- [ ] 1. Damit man für ein Fahrzeug verschiedene Verhaltensweisen realisieren kann, wird die Klasse **Fahrzeug** um eine Membervariable `p_pVerhalten` erweitert, die eine Instanz der im Folgenden noch zu implementierenden Klasse **Verhalten** verwaltet. Durch Austausch dieses Objektes kann das Verhalten des Fahrzeugs verändert werden, ohne ein neues Fahrzeug erstellen zu müssen. Überlegen Sie, welche Art von Smartpointer für `p_pVerhalten` gewählt werden sollte.
+- [x] 1. Damit man für ein Fahrzeug verschiedene Verhaltensweisen realisieren kann, wird die Klasse **Fahrzeug** um eine Membervariable `p_pVerhalten` erweitert, die eine Instanz der im Folgenden noch zu implementierenden Klasse **Verhalten** verwaltet. Durch Austausch dieses Objektes kann das Verhalten des Fahrzeugs verändert werden, ohne ein neues Fahrzeug erstellen zu müssen. Überlegen Sie, welche Art von Smartpointer für `p_pVerhalten` gewählt werden sollte.
    
    Unter Verhalten verstehen wir, dass zwischen fahrenden und parkenden Fahrzeugen unterschieden werden kann.
    
@@ -138,7 +138,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
    
    Da es zurzeit noch keine Einschränkungen für die Fahrzeuge gibt, soll die Funktion `dStrecke`, wie in Figure 5.1 gezeigt, die auf Grundlage der übergebenen Zeitspanne fahrbare Strecke zurückliefern, falls dadurch die Weglänge noch nicht überschritten wird ($dT_1 \dots dT_{n-1}$). Im Zeittakt $dT_n$ soll nur die bis zum Wegende verbleibende Strecke zurückgegeben werden, womit das Fahrzeug genau am Ende des Weges ankommt. Im letzten Zeittakt $dT_{n+1}$ wird dann erkannt, dass das Fahrzeug am Ende des Weges steht. Zunächst soll das Programm hier nur eine entsprechende Meldung ausgeben, dass es am Ende des Weges angekommen ist.
 
-- [ ] 2. Schreiben Sie nun eine Funktion `Weg::vAnnahme(unique_ptr<Fahrzeug>)`, die ein Fahrzeug auf dem Weg annimmt. Dazu muss es in die Liste der Fahrzeuge eingetragen werden. Da ein `unique_ptr` nicht kopiert werden kann, muss der Pointer auf das Fahrzeug mit `move` verschoben werden. Damit man die eingetragenen Fahrzeuge auch sehen kann, werden diese in Klammern an die Ausgabe des Weges angehängt. Weiterhin muss dem Fahrzeug signalisiert werden, dass es sich auf einer neuen Strecke befindet.
+- [x] 2. Schreiben Sie nun eine Funktion `Weg::vAnnahme(unique_ptr<Fahrzeug>)`, die ein Fahrzeug auf dem Weg annimmt. Dazu muss es in die Liste der Fahrzeuge eingetragen werden. Da ein `unique_ptr` nicht kopiert werden kann, muss der Pointer auf das Fahrzeug mit `move` verschoben werden. Damit man die eingetragenen Fahrzeuge auch sehen kann, werden diese in Klammern an die Ausgabe des Weges angehängt. Weiterhin muss dem Fahrzeug signalisiert werden, dass es sich auf einer neuen Strecke befindet.
    **Beispiel:**
    ```
    ID | Name      | Laenge | Fahrzeuge
@@ -146,7 +146,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
     0 | weg       :    100 | ( BMW Audi BMX )
    ```
    
-- [ ] 3. Testen Sie Ihre neue Klasse in `vAufgabe_5()`, indem Sie einen Weg und drei Fahrzeuge erzeugen, diese auf den Weg setzen und den Weg simulieren.
+- [x] 3. Testen Sie Ihre neue Klasse in `vAufgabe_5()`, indem Sie einen Weg und drei Fahrzeuge erzeugen, diese auf den Weg setzen und den Weg simulieren.
    
 - [ ] 4. Der Simulation sollen nun parkende Fahrzeuge hinzugefügt werden. Parkende Fahrzeuge benötigen ein anderes Verhaltensmuster, da diese sich nicht fortbewegen. Erweitern Sie dazu die Klasse **Verhalten** zu einer Klassenhierarchie, wobei Sie zwei Klassen **Fahren** und **Parken** von **Verhalten** ableiten. 
    

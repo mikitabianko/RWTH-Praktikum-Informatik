@@ -227,9 +227,9 @@ void vAufgabe_2() {
 
 	for (int i = 0; i < iPKWAnzahl; ++i) {
 		std::string sName;
-		double dMaxGeschwindigkeit, dVerbrauch, dTankvolumen;
+		double dMaxGeschwindigkeit, dVerbrauch;
 		std::cout << "PKW " << (i+1) << ": Bitte Name, maximale Geschwindigkeit, Verbrauch und Tankvolumen eingeben: ";
-		std::cin >> sName >> dMaxGeschwindigkeit >> dVerbrauch;// >> dTankvolumen;
+		std::cin >> sName >> dMaxGeschwindigkeit >> dVerbrauch;
 
 		pVectorFahrzeuge.push_back(std::make_unique<PKW>(sName, dMaxGeschwindigkeit, dVerbrauch));
 	}
@@ -532,7 +532,7 @@ void vAufgabe_AB1() {
 }
 
 void vAufgabe_4() {
-	std::cout << "\nTest der Klasse Weg:\n";
+	std::cout << "Test der Klasse Weg:\n";
     Weg w1("Testweg", 100.0, Tempolimit::Landstrasse);
     Weg w2("Testweg2", 500.0, Tempolimit::Autobahn);
 	Weg w3("weg", 50.0, Tempolimit::Innerorts);
@@ -546,12 +546,71 @@ void vAufgabe_4() {
 	// Wurde ein Simulationsobjekt mit dem Namen: "weg", und mit dem Id: 2 erstellt
 	//  ID |            Name |  Laenge | Fahrzeuge
 	// -----------------------------------------------
-	//      0        Testweg :  100.00 ()
-	//      1       Testweg2 :  500.00 ()
-	//      2            weg :   50.00 ()
+	//   0           Testweg :  100.00 ()
+	//   1          Testweg2 :  500.00 ()
+	//   2               weg :   50.00 ()
 	// Wurde ein Simulationsobjekt mit dem Namen: "weg", und mit dem Id: 2 gelöscht
 	// Wurde ein Simulationsobjekt mit dem Namen: "Testweg2", und mit dem Id: 1 gelöscht
 	// Wurde ein Simulationsobjekt mit dem Namen: "Testweg", und mit dem Id: 0 gelöscht
+}
+
+void vAufgabe_5() {
+	std::cout << "Test der Klasse Weg mit Fahrzeugen:\n";
+	auto bmw = std::make_unique<Fahrzeug>("BMW", 180.0);
+    auto audi = std::make_unique<Fahrzeug>("Audi", 220.0);
+    auto bmx = std::make_unique<Fahrzeug>("BMX", 45.0);
+
+    Weg w("A1", 100.0, Tempolimit::Autobahn);
+	w.vAnnahme(std::move(bmw));
+	w.vAnnahme(std::move(audi));
+	w.vAnnahme(std::move(bmx));
+
+	w.vSimulieren();
+
+	Weg::vKopf();  
+    std::cout << w << std::endl;
+
+	dGlobaleZeit = 0;
+	double dIntervall = 0.5;  // Stunden
+	for (int i = 0; i < 3; ++i, dGlobaleZeit += dIntervall) {  // z. B. 2 Stunden simulieren
+		std::cout << "Globale Zeit: " << dGlobaleZeit << std::endl;
+		w.vSimulieren();
+		Fahrzeug::vKopf();
+		for (const auto& fzg : w.pGetFahrzeuge()) {  
+			std::cout << *fzg << std::endl;
+		}
+	}
+	// Test der Klasse Weg mit Fahrzeugen:
+	// Wurde ein Simulationsobjekt mit dem Namen: "BMW", und mit dem Id: 0 erstellt
+	// Wurde ein Simulationsobjekt mit dem Namen: "Audi", und mit dem Id: 1 erstellt
+	// Wurde ein Simulationsobjekt mit dem Namen: "BMX", und mit dem Id: 2 erstellt
+	// Wurde ein Simulationsobjekt mit dem Namen: "A1", und mit dem Id: 3 erstellt
+	//  ID |            Name |  Laenge | Fahrzeuge
+	// -----------------------------------------------
+	//   3                A1 :  100.00 (BMW Audi BMX)
+	// Globale Zeit: 0.00
+	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------
+	//   0               BMW                 180.00              0.00                   0.00
+	//   1              Audi                 220.00              0.00                   0.00
+	//   2               BMX                  45.00              0.00                   0.00
+	// Globale Zeit: 0.50
+	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------
+	//   0               BMW                 180.00             90.00                  90.00
+	//   1              Audi                 220.00            100.00                 100.00
+	//   2               BMX                  45.00             22.50                  22.50
+	// Globale Zeit: 1.00
+	// Fahrzeug "Audi" hat das Ende des Weges "A1" erreicht.
+	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------
+	//   0               BMW                 180.00            100.00                 100.00
+	//   1              Audi                 220.00            100.00                 100.00
+	//   2               BMX                  45.00             45.00                  45.00
+	// Wurde ein Simulationsobjekt mit dem Namen: "BMW", und mit dem Id: 0 gelöscht
+	// Wurde ein Simulationsobjekt mit dem Namen: "Audi", und mit dem Id: 1 gelöscht
+	// Wurde ein Simulationsobjekt mit dem Namen: "BMX", und mit dem Id: 2 gelöscht
+	// Wurde ein Simulationsobjekt mit dem Namen: "A1", und mit dem Id: 3 gelöscht
 }
 
 int main() {
@@ -567,7 +626,8 @@ int main() {
 	// vAufgabe_Probe();
 	// vAufgabe_AB1();
 
-	vAufgabe_4();
+	// vAufgabe_4();
+	vAufgabe_5();
 
 	return 0;
 }

@@ -3,11 +3,16 @@
 
 #include "Simulationsobjekt.h"
 
+class Verhalten;
+class Weg;
+
 class Fahrzeug : public Simulationsobjekt {
 protected:
 	double p_dMaxGeschwindigkeit = 0.0; // die Maximalgeschwindigkeit des Fahrzeugs
 	double p_dGesamtStrecke = 0.0; // die bisher zurückgelegte Gesamtstrecke 
 	double p_dGesamtZeit = 0.0; // die gesamte Fahrzeit
+	std::unique_ptr<Verhalten> p_pVerhalten;
+	double p_dAbschnittStrecke = 0.0;
 
 public:
 	Fahrzeug();
@@ -17,7 +22,7 @@ public:
 
 	Fahrzeug(const Fahrzeug&) = delete;
 
-	virtual ~Fahrzeug() = default;
+	virtual ~Fahrzeug();
 
 	static void vKopf();
 
@@ -28,6 +33,10 @@ public:
 	virtual double dGeschwindigkeit() const;
 
 	virtual double dTanken(double dMenge = std::numeric_limits<double>::infinity());
+
+	void vNeueStrecke(Weg& weg);
+
+    double dGetAbschnittStrecke() const;
 
 	bool operator<(const Fahrzeug& other) const;
 

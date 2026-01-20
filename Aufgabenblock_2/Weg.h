@@ -31,7 +31,13 @@ public:
 
     virtual void vSimulieren() override;
 
-    double getTempolimit() const;
+    void vAnnahme(std::unique_ptr<Fahrzeug> aFzg);
+
+    double dGetLaenge() const;
+
+    double dGetTempolimit() const;
+
+    const std::list<std::unique_ptr<Fahrzeug>>& pGetFahrzeuge() const { return p_pFahrzeuge; }
 };
 
 #endif
