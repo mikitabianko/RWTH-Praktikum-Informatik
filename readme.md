@@ -157,6 +157,26 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
    Überladen Sie entsprechend auch die Funktion `Fahrzeug::vNeueStrecke`. Fügen Sie fahrende Fahrzeuge hinten in die Liste an, parkende Fahrzeuge vorne. Diese Eigenschaft werden wir später noch benötigen.
    
 - [x] 5. Modifizieren Sie `vAufgabe_5` mehrfach so, dass das Programm beim Starten bzw. am Streckenende entsprechende Meldungen ausgibt. Alternativ können Sie dies auch mit Hilfe des Debuggers testen.
+
+## 5.5 Losfahren, Streckenende (Exception Handling)
+
+- [x] 1. Sie haben bisher an zwei Stellen im Programm nur eine Meldung für das Losfahren und das Streckenende. Stattdessen soll nun jeweils eine Ausnahme (_Exception_) geworfen werden (_throw_), die dann in der Simulationsmethode des Weges aufgefangen (_catch_) und abgearbeitet werden kann. Da Sie zwei verschiedene Arten von Ausnahmen werfen, ist es vernünftig, eine Klassenhierarchie für diese Ausnahmefälle zu erstellen. 
+
+   Leiten Sie dazu zwei Klassen _Losfahren_ und _Streckenende_ von einer abstrakten Klasse _Fahrausnahme_ ab. Zusätzlich leiten Sie die Klasse _Fahrausnahme_ von der Klasse _exception_ aus der C++ Standardbibliothek ab. Überlegen Sie sich, was das für Vorteile mitbringt. _Fahrausnahme_ soll eine Referenz auf _Fahrzeug_ und eine Referenz auf _Weg_ als Membervariable besitzen. Diese speichern jeweils das Fahrzeug und den Weg, bei denen die Ausnahme aufgetreten sind. Implementieren Sie auch einen entsprechenden Konstruktor, der die beiden Referenzen setzt. Weiterhin hat die Klasse eine rein virtuelle Funktion `vBearbeiten()`. Geben Sie in den beiden Bearbeitungsmethoden der Unterklassen vorerst nur Fahrzeug, Weg und Art der Ausnahme aus.
+
+   Beim Auftreten der Ausnahmen (bisher Ausgaben) sollen nun die entsprechenden Objekte geworfen und in der Simulationsroutine des Weges aufgefangen werden. Nachdem ein Ausnahmeobjekt gefangen wurde, wird für dieses einfach nur die Bearbeitungsfunktion `vBearbeiten()` ausgeführt.
+
+   **Beachte:** Fangen Sie beide Ausnahmen mit nur **einem** _catch_-Block. Wieso ist das möglich?
+   
+- [x] 2. Über die Klasse _Verhalten_ haben Fahrzeuge und die davon abgeleiteten Klassen Kenntnis vom befahrenen Weg. Berücksichtigen Sie die Maximalgeschwindigkeit (`Weg::p_dTempolimit`), die für den befahrenen Weg, aber nur für PKW gilt, indem Sie die Methode `PKW::dGeschwindigkeit()` entsprechend implementieren. Definieren Sie zum Testen einen Weg mit Tempolimit.
+   
+- [x] 3. Testen Sie nun mit einer Funktion `vAufgabe_6` die gerade implementierte Ausnahmebehandlung und das Tempolimit. Erzeugen Sie dazu zwei Wege (mindestens einer mit Tempolimit) und setzen Sie fahrende und parkende Fahrzeuge auf diese Wege und fertigen beide Wege ab.
+   
+   **Beachte:** Die Ausnahmen _Streckenende_ und _Losfahren_ werden beim Erreichen des Wegendes bzw. des Startzeitpunkte bei jedem folgenden Simulationsschritt erneut geworfen. Die entsprechenden Meldungen kommen also mehrfach. Da wir noch keine Fahrzeuge von der Liste entfernen oder umsetzen, ist dieses Verhalten kein Fehler.
+   
+- [x] 4. **Aufgabe zur Nutzung des Debuggers:** 
+   Kontrollieren Sie mit Hilfe des Debuggers, ob das Losfahren immer zum richtigen Zeitpunkt auftritt. Lassen Sie dazu ein Fahrzeug beim Zeitpunkt 3.0 losfahren. Überprüfen Sie den Startzeitpunkt einmal bei einem Zeittakt der globalen Zeit von 0.25 und einmal bei 0.3. Korrigieren Sie ggf. Ihren Code so, dass in beiden Fällen beim Zeitpunkt 3.0 losgefahren wird.
+
 ## 5.6 Grafische Ausgabe
 
 - [ ] 1. Um die Simulation anschaulicher zu machen, soll sie nun grafisch dargestellt werden. Dazu wurde ein Client/Server-Modell entwickelt, bei dem der Server vom Client über TCP/IP Kommandos empfängt und diese dann in eine grafische Darstellung umsetzt.

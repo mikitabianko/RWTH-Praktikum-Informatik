@@ -1,6 +1,7 @@
 #include "Weg.h"
 #include "Fahrzeug.h" // notwendig für vSimulieren()
 #include <limits>
+#include "Fahrausnahme.h"
 
 Weg::Weg() : Simulationsobjekt() { }
 
@@ -30,7 +31,11 @@ double Weg::dGetTempolimit() const {
 
 void Weg::vSimulieren() {
     for (auto& pFahrzeug : p_pFahrzeuge) {
-        pFahrzeug->vSimulieren();
+        try {
+            pFahrzeug->vSimulieren();
+        } catch (Fahrausnahme& e) {
+            e.vBearbeiten();
+        }
     }
     p_dZeit = dGlobaleZeit;  
 }

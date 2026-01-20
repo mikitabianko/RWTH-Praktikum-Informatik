@@ -16,13 +16,15 @@ private:
 
 public:
     PKW(std::string sName, double dMaxGeschwindigkeit,
-         double dVerbrauch, double bIsGleich = 55);
+         double dVerbrauch, double dTankvolumen = 55);
 
     void vSimulieren() override;
 
     double dTanken(double dMenge = std::numeric_limits<double>::infinity()) override;
 
     void vAusgeben(std::ostream& o) const override;
+
+    virtual double dGeschwindigkeit() const override;
 };
 
 #endif // PKW_H

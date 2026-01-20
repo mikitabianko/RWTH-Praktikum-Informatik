@@ -3,6 +3,7 @@
 #include "Weg.h"
 #include "Fahren.h"
 #include "Parken.h"
+#include "Streckenende.h"
 
 Fahrzeug::Fahrzeug() : Simulationsobjekt() {
 }
@@ -55,12 +56,7 @@ void Fahrzeug::vSimulieren() {
     // double dStrecke = dAktGeschw * dZeitDiff; 
 
     if (std::fabs(dStrecke) <= dEpsilon && std::fabs(p_dAbschnittStrecke - p_pVerhalten->getWeg().dGetLaenge()) <= dEpsilon) {
-        if (!p_bAmEndeGemeldet) {
-            std::cout << "Fahrzeug \"" << sGetName() << "\" hat das Ende des Weges \"" << p_pVerhalten->getWeg().sGetName() << "\" erreicht." << std::endl;
-            p_bAmEndeGemeldet = true;
-        }
-    } else {
-        p_bAmEndeGemeldet = false;
+        throw Streckenende(*this, p_pVerhalten->getWeg());
     }
     
     p_dGesamtStrecke += dStrecke;

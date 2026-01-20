@@ -6,7 +6,6 @@
 class Parken : public Verhalten {
 private:
     double p_dStartzeitpunkt;
-    bool p_bGestartet = false; // Flag, um Meldung nur einmal auszugeben
 
 public:
     Parken(Weg& weg, double dStartzeitpunkt);

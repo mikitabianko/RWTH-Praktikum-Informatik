@@ -1,4 +1,6 @@
 #include "PKW.h"
+#include "Verhalten.h"
+#include "Weg.h"
 
 PKW::PKW(std::string sName, double dMaxGeschwindigkeit,
          double dVerbrauch, double dTankvolumen)
@@ -56,7 +58,14 @@ void PKW::vAusgeben(std::ostream& o) const {
     Fahrzeug::vAusgeben(o);
     o << std::resetiosflags(std::ios::left) << std::setiosflags(std::ios::right)
               << std::fixed << std::setprecision(2)
-              << std::setw(17) << p_dGesamtStrecke * p_dVerbrauch / 100
-              << std::setw(12) << p_dTankinhalt
-              << std::setw(26) << "-";
+              << std::setw(17 + 3) << p_dGesamtStrecke * p_dVerbrauch / 100
+              << std::setw(12 + 3) << p_dTankinhalt
+              << std::setw(26 + 3) << "-";
+}
+
+double PKW::dGeschwindigkeit() const {
+    if (p_pVerhalten) {
+        return std::min(p_dMaxGeschwindigkeit, p_pVerhalten->getWeg().dGetTempolimit());
+    }
+    return p_dMaxGeschwindigkeit;
 }
