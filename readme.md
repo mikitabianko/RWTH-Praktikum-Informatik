@@ -1,3 +1,7 @@
+In this project, all function outputs are written as comments at the end of the functions.
+
+---
+
 # Aufgabenblock 1
 
 ## Motivation
@@ -117,6 +121,72 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
     
 - [x] 3. Testen Sie Ihr altes Hauptprogramm. Es sollte noch unverändert funktionieren. In `vAufgabe_4()` testen Sie zusätzlich die neue Klasse _Weg_, indem Sie einen Weg erzeugen und ihn mit dem `<<`-Operator auf die Standardausgabe ausgeben.
 
----
+## 5.4 Parkende und fahrende Fahrzeuge
 
-In this project, all function outputs are written as comments at the end of the functions.
+- [ ] 1. Damit man für ein Fahrzeug verschiedene Verhaltensweisen realisieren kann, wird die Klasse **Fahrzeug** um eine Membervariable `p_pVerhalten` erweitert, die eine Instanz der im Folgenden noch zu implementierenden Klasse **Verhalten** verwaltet. Durch Austausch dieses Objektes kann das Verhalten des Fahrzeugs verändert werden, ohne ein neues Fahrzeug erstellen zu müssen. Überlegen Sie, welche Art von Smartpointer für `p_pVerhalten` gewählt werden sollte.
+   
+   Unter Verhalten verstehen wir, dass zwischen fahrenden und parkenden Fahrzeugen unterschieden werden kann.
+   
+   Da das Verhalten u.a. vom jeweiligen Weg abhängt, bekommt die Klasse **Verhalten** einen Konstruktor, der eine Referenz auf einen **Weg** als Parameter bekommt und speichert. Weiterhin soll eine Funktion `double dStrecke(Fahrzeug& aFzg, double dZeitIntervall)` angeboten werden, die ermittelt, wie weit ein Fahrzeug innerhalb des übergebenen Zeitintervalls fahren kann, ohne das Wegende zu überschreiten. Die bisherige Berechnung der aktuellen Teilstrecke in `Fahrzeug::vSimulieren` wird durch den Aufruf der Funktion `dStrecke` ersetzt. Zum lesenden Zugriff auf private Variablen von Weg und Fahrzeug müssen ggf. neue Getter-Funktionen geschrieben werden. Beachten Sie, dass `dStrecke` in jedem Simulationsschritt nur einmal aufgerufen und das Zwischenergebnis lokal zwischengespeichert wird.
+   
+   Bei jedem Start eines Fahrzeugs auf einem neuen Weg soll nun eine Instanz von **Verhalten** erzeugt und in **Fahrzeug** gespeichert werden. Dies geschieht am besten durch eine neue Memberfunktion `Fahrzeug::vNeueStrecke(Weg&)`, die ein geeignetes Objekt erzeugt und in `p_pVerhalten` speichert. Was passiert mit der alten Instanz, wenn das Fahrzeug auf einen neuen Weg gesetzt wird? 
+   
+   ![image](https://github.com/mikitabianko/RWTH-Praktikum-Informatik/blob/master/assets/image1.png?raw=true)
+   
+   Da Fahrzeuge jetzt nacheinander auf verschiedenen Wegen fahren sollen, führen wir hier eine zusätzliche Membervariable `p_dAbschnittStrecke` in Fahrzeug ein. Diese speichert immer nur die auf dem aktuellen Weg zurückgelegte Strecke. Sie wird in gleicher Weise wie bisher `p_dGesamtStrecke` aktualisiert und beim Betreten des Weges auf 0 gesetzt. Fügen Sie diese Variable Ihren Berechnungen und Ausgaben für **Fahrzeug** hinzu. Die Variable `p_dGesamtStrecke` soll weiterhin gepflegt werden. 
+   
+   Da es zurzeit noch keine Einschränkungen für die Fahrzeuge gibt, soll die Funktion `dStrecke`, wie in Figure 5.1 gezeigt, die auf Grundlage der übergebenen Zeitspanne fahrbare Strecke zurückliefern, falls dadurch die Weglänge noch nicht überschritten wird ($dT_1 \dots dT_{n-1}$). Im Zeittakt $dT_n$ soll nur die bis zum Wegende verbleibende Strecke zurückgegeben werden, womit das Fahrzeug genau am Ende des Weges ankommt. Im letzten Zeittakt $dT_{n+1}$ wird dann erkannt, dass das Fahrzeug am Ende des Weges steht. Zunächst soll das Programm hier nur eine entsprechende Meldung ausgeben, dass es am Ende des Weges angekommen ist.
+
+- [ ] 2. Schreiben Sie nun eine Funktion `Weg::vAnnahme(unique_ptr<Fahrzeug>)`, die ein Fahrzeug auf dem Weg annimmt. Dazu muss es in die Liste der Fahrzeuge eingetragen werden. Da ein `unique_ptr` nicht kopiert werden kann, muss der Pointer auf das Fahrzeug mit `move` verschoben werden. Damit man die eingetragenen Fahrzeuge auch sehen kann, werden diese in Klammern an die Ausgabe des Weges angehängt. Weiterhin muss dem Fahrzeug signalisiert werden, dass es sich auf einer neuen Strecke befindet.
+   **Beispiel:**
+   ```
+   ID | Name      | Laenge | Fahrzeuge
+    -------------------------------------------------
+    0 | weg       :    100 | ( BMW Audi BMX )
+   ```
+   
+- [ ] 3. Testen Sie Ihre neue Klasse in `vAufgabe_5()`, indem Sie einen Weg und drei Fahrzeuge erzeugen, diese auf den Weg setzen und den Weg simulieren.
+   
+- [ ] 4. Der Simulation sollen nun parkende Fahrzeuge hinzugefügt werden. Parkende Fahrzeuge benötigen ein anderes Verhaltensmuster, da diese sich nicht fortbewegen. Erweitern Sie dazu die Klasse **Verhalten** zu einer Klassenhierarchie, wobei Sie zwei Klassen **Fahren** und **Parken** von **Verhalten** ableiten. 
+   
+   **Verhalten** soll als _abstrakte Oberklasse_ implementiert werden. **Fahren** soll funktionieren wie vorher **Verhalten**. Implementieren Sie daher für **Fahren** den Code nicht doppelt, sondern übernehmen diesen. Die Klasse **Parken** hat einen Konstruktor, der zusätzlich zum Weg den Startzeitpunkt des Fahrzeugs übergeben bekommt. `Parken::dStrecke()` liefert bis zum Erreichen des Startzeitpunktes den Wert 0.0 zurück. Wenn die Startzeit erreicht wurde, soll das Programm auch hier zunächst eine entsprechende Meldung ausgeben.
+   
+   Auf einem Weg sollen sich sowohl parkende als auch fahrende Fahrzeuge befinden können. Um beide zu unterscheiden, soll die Funktion `vAnnahme(unique_ptr<Fahrzeug>)` durch eine weitere Funktion `vAnnahme(unique_ptr<Fahrzeug>, double)` überladen werden. Bekommt sie nur einen Zeiger auf Fahrzeug als Argument, dann nimmt sie wie bisher ein fahrendes Fahrzeug an. Wird jedoch ein Zeiger auf Fahrzeug und eine Startzeit übergeben, nimmt sie ein parkendes Fahrzeug an. Alle Fahrzeuge sollen weiterhin zusammen in der vorhandenen Liste verwaltet werden. 
+   
+   Überladen Sie entsprechend auch die Funktion `Fahrzeug::vNeueStrecke`. Fügen Sie fahrende Fahrzeuge hinten in die Liste an, parkende Fahrzeuge vorne. Diese Eigenschaft werden wir später noch benötigen.
+   
+- [ ] 5. Modifizieren Sie `vAufgabe_5` mehrfach so, dass das Programm beim Starten bzw. am Streckenende entsprechende Meldungen ausgibt. Alternativ können Sie dies auch mit Hilfe des Debuggers testen.
+## 5.6 Grafische Ausgabe
+
+- [ ] 1. Um die Simulation anschaulicher zu machen, soll sie nun grafisch dargestellt werden. Dazu wurde ein Client/Server-Modell entwickelt, bei dem der Server vom Client über TCP/IP Kommandos empfängt und diese dann in eine grafische Darstellung umsetzt.
+   
+   Die Grafikschnittstelle wird Ihnen durch die Klassen `SimuClient` und `SimuClientSocket` zur Verfügung gestellt. Der grafische Server wird über die Java-Datei `SimuServer.jar` zur Verfügung gestellt. Um die Grafikschnittstelle nutzen zu können, kopieren Sie zunächst die erforderlichen Dateien (`SimuClient.h`, `SimuClient.cpp`, `SimuClientSocket.h`, `SimuClientSocket.cpp`, `SimuServer.jar`) in Ihr Projektverzeichnis (Verzeichnis mit cpp/h-Dateien, z.B. _Aufgabenblock_2_) in Ihrem Eclipse-Workspace. Die Dateien finden Sie in den Vorgabedateien in Moodle.
+   
+   **Grafikschnittstelle**
+   
+   Die Funktionen der Grafikbibliothek arbeiten nur mit den übergebenen Werten, kennen also keine anderen Daten Ihres Projektes. Die Werte werden beim Aufruf aber auf syntaktische und semantische Plausibilität geprüft. Das bedeutet:
+   
+   - a) Zahlenwerte müssen in einem sinnvollen Wertebereich liegen.
+   - b) Die Namen dürfen nur Buchstaben, Ziffern und _ enthalten, insbesondere keine Leerzeichen.
+   - c) Fahrzeuge können nur auf Straßen gezeichnet werden, die vorher durch zwei Wege definiert wurden.
+   
+   Die Grafikschnittstelle stellt folgende Funktionen zur Verfügung:
+   - **`bInitialisiereGrafik(int GroesseX, int GroesseY);`** Mit dieser Funktion stellen Sie eine Verbindung zum Grafikserver her und initialisieren die Größe des Fensters. Die Variablen _GroesseX_ und _GroesseY_ bestimmen die Größe der Grafikdarstellung. Verwenden Sie hier z.B. folgende Werte: `GroesseX=800; GroesseY=500`. `bInitialisiereGrafik(800, 500);`
+   - **`vSetzeZeit(double Zeit)`** Mit dieser Funktion können Sie die globale Zeit in der Titelzeile des Ausgabefensters anzeigen lassen.
+   - **`bZeichneStrasse(string NameHin, string NameRueck, int Laenge, int AnzahlKoord, int[] Koordinaten)`** Diese Funktion zeichnet eine Straße, die aus den beiden durch ihren Namen identifizierten Wegen besteht. Die Straße soll mit einer Reihe von Koordinaten dargestellt werden. Der Verlauf der Straße wird durch einen Polygonzug mit mindestens 2 Punkten (Gerade) skizziert. Die Koordinaten der Polygonpunkte werden im Array _Koordinaten_ übergeben. Das Array enthält _AnzahlKoord_ X/Y-Paare. Für eine gerade Straße benutzen Sie für Koordinaten z.B. die Werte `{ 700, 250, 100, 250 }`.
+   **Beachte:**
+	   - a) Achten Sie darauf, dass die X-/Y-Koordinatenwerte innerhalb der vorher definierten (`bInitialisiereGrafik()`) Grenzen liegen.
+	- b) Das Array muss genau (2 x AnzahlKoord) int-Elemente enthalten.
+	- c) Diese Funktion darf für jede Straße nur einmal aufgerufen werden.
+	- **`bZeichnePKW(string PKWName, string WegName, double RelPosition, double KmH, double Tank)`**
+	- **`bZeichneFahrrad(string FahrradName, string WegName, double RelPosition, double KmH)`** Diese Funktionen zeichnen jeweils eine symbolische Darstellung des PKW/Fahrrads auf dem durch seinen Namen identifizierten Weg. Die relativ zur Weglänge zurückgelegte Strecke (Wert zwischen 0 und 1) wird mit _RelPosition_ angegeben. Dem Parameter _KmH_ wird der Wert aus der Funktion `dGeschwindigkeit()` und dem Parameter _Tank_ der aktuelle Tankinhalt übergeben.
+	- **`BeendeGrafik()`** Mit dieser Funktion wird die Verbindung zum Grafikserver getrennt, das Fenster wird automatisch geschlossen.
+	- **`void vSleep(int zeit_ms);`** Mit dieser Funktion wird die weitere Programmausführung um _zeit_ms_ Millisekunden verzögert.
+
+- [ ] 2. Erweitern Sie `vAufgabe_6()` so, dass die Grafikausgabe getestet werden kann. Fügen Sie den Header `SimuClient.h` in Ihrer `main.cpp` ein. Wählen Sie als Länge der beiden Wege jeweils 500km und fassen Sie diese grafisch zu einer Straße zusammen (Hin- und Rückweg).
+   
+- [ ] 3. Um beim Zeichnen, abhängig vom Fahrzeugobjekt-Typ, die korrekte Zeichenfunktion aufzurufen, soll für PKW und Fahrrad eine Funktion `vZeichnen(const Weg&)` implementiert werden. Dazu wird in **Fahrzeug** die Funktion virtuell deklariert und in der jeweiligen Unterklasse überschrieben. Die Funktion bekommt den Weg, auf dem das Fahrzeug gezeichnet werden soll, als Referenz übergeben und ruft dann die passende Zeichenfunktion (s.o.) auf.
+   
+- [ ] 4. Lassen Sie die Fahrzeuge nach jeder Simulation in Weg zeichnen.
+   
+- [ ] 5. Führen Sie Ihre Simulation aus. Um die Simulation besser verfolgen zu können, rufen Sie die Funktion `vSleep` in Ihrer Schleife auf. Je nach Rechenleistung des verwendeten Computers können Sie die Verzögerung anpassen (100ms).

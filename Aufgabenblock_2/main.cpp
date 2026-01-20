@@ -540,6 +540,18 @@ void vAufgabe_4() {
     std::cout << w1 << std::endl;
 	std::cout << w2 << std::endl;
 	std::cout << w3 << std::endl;
+	// Test der Klasse Weg:
+	// Wurde ein Simulationsobjekt mit dem Namen: "Testweg", und mit dem Id: 0 erstellt
+	// Wurde ein Simulationsobjekt mit dem Namen: "Testweg2", und mit dem Id: 1 erstellt
+	// Wurde ein Simulationsobjekt mit dem Namen: "weg", und mit dem Id: 2 erstellt
+	//  ID |            Name |  Laenge | Fahrzeuge
+	// -----------------------------------------------
+	//      0        Testweg :  100.00 ()
+	//      1       Testweg2 :  500.00 ()
+	//      2            weg :   50.00 ()
+	// Wurde ein Simulationsobjekt mit dem Namen: "weg", und mit dem Id: 2 gelöscht
+	// Wurde ein Simulationsobjekt mit dem Namen: "Testweg2", und mit dem Id: 1 gelöscht
+	// Wurde ein Simulationsobjekt mit dem Namen: "Testweg", und mit dem Id: 0 gelöscht
 }
 
 int main() {
