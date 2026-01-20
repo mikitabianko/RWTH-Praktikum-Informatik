@@ -32,6 +32,8 @@ public:
     virtual void vSimulieren() override;
 
     void vAnnahme(std::unique_ptr<Fahrzeug> aFzg);
+    
+    void vAnnahme(std::unique_ptr<Fahrzeug> aFzg, double dStartzeit);
 
     double dGetLaenge() const;
 

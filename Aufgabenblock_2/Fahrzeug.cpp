@@ -1,6 +1,8 @@
 #include "Fahrzeug.h"
 #include "Verhalten.h"
 #include "Weg.h"
+#include "Fahren.h"
+#include "Parken.h"
 
 Fahrzeug::Fahrzeug() : Simulationsobjekt() {
 }
@@ -53,7 +55,12 @@ void Fahrzeug::vSimulieren() {
     // double dStrecke = dAktGeschw * dZeitDiff; 
 
     if (std::fabs(dStrecke) <= dEpsilon && std::fabs(p_dAbschnittStrecke - p_pVerhalten->getWeg().dGetLaenge()) <= dEpsilon) {
-        std::cout << "Fahrzeug \"" << sGetName() << "\" hat das Ende des Weges \"" << p_pVerhalten->getWeg().sGetName() << "\" erreicht." << std::endl;
+        if (!p_bAmEndeGemeldet) {
+            std::cout << "Fahrzeug \"" << sGetName() << "\" hat das Ende des Weges \"" << p_pVerhalten->getWeg().sGetName() << "\" erreicht." << std::endl;
+            p_bAmEndeGemeldet = true;
+        }
+    } else {
+        p_bAmEndeGemeldet = false;
     }
     
     p_dGesamtStrecke += dStrecke;
@@ -87,7 +94,12 @@ Fahrzeug& Fahrzeug::operator=(const Fahrzeug& other) {
 }
 
 void Fahrzeug::vNeueStrecke(Weg& weg) {
-    p_pVerhalten = std::make_unique<Verhalten>(weg);
+    p_pVerhalten = std::make_unique<Fahren>(weg);
+    p_dAbschnittStrecke = 0.0;
+}
+
+void Fahrzeug::vNeueStrecke(Weg& weg, double dStartzeit) {
+    p_pVerhalten = std::make_unique<Parken>(weg, dStartzeit);
     p_dAbschnittStrecke = 0.0;
 }
 

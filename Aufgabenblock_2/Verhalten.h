@@ -13,7 +13,7 @@ public:
 
     virtual ~Verhalten();
 
-    virtual double dStrecke(Fahrzeug& aFzg, double dZeitIntervall);
+    virtual double dStrecke(Fahrzeug& aFzg, double dZeitIntervall) = 0;
 
     Weg& getWeg() const;
 };

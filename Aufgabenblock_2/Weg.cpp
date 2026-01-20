@@ -62,3 +62,9 @@ void Weg::vAnnahme(std::unique_ptr<Fahrzeug> aFzg) {
     p_pFahrzeuge.push_back(std::move(aFzg));
     p_pFahrzeuge.back()->vNeueStrecke(*this);
 }
+
+void Weg::vAnnahme(std::unique_ptr<Fahrzeug> aFzg, double dStartzeit) {
+    if (!aFzg) return; 
+    aFzg->vNeueStrecke(*this, dStartzeit);
+    p_pFahrzeuge.push_front(std::move(aFzg)); // Parkende vorne
+}

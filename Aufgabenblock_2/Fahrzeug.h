@@ -13,6 +13,7 @@ protected:
 	double p_dGesamtZeit = 0.0; // die gesamte Fahrzeit
 	std::unique_ptr<Verhalten> p_pVerhalten;
 	double p_dAbschnittStrecke = 0.0;
+	bool p_bAmEndeGemeldet = false;
 
 public:
 	Fahrzeug();
@@ -35,6 +36,8 @@ public:
 	virtual double dTanken(double dMenge = std::numeric_limits<double>::infinity());
 
 	void vNeueStrecke(Weg& weg);
+
+	void vNeueStrecke(Weg& weg, double dStartzeit);
 
     double dGetAbschnittStrecke() const;
 

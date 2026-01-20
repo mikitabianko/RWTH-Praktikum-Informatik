@@ -562,7 +562,7 @@ void vAufgabe_5() {
 
     Weg w("A1", 100.0, Tempolimit::Autobahn);
 	w.vAnnahme(std::move(bmw));
-	w.vAnnahme(std::move(audi));
+	w.vAnnahme(std::move(audi), 0.5);
 	w.vAnnahme(std::move(bmx));
 
 	w.vSimulieren();
@@ -571,8 +571,8 @@ void vAufgabe_5() {
     std::cout << w << std::endl;
 
 	dGlobaleZeit = 0;
-	double dIntervall = 0.5;  // Stunden
-	for (int i = 0; i < 3; ++i, dGlobaleZeit += dIntervall) {  // z. B. 2 Stunden simulieren
+	double dIntervall = 0.3;  // Stunden
+	for (int i = 0; i < 4; ++i, dGlobaleZeit += dIntervall) {  // z. B. 2 Stunden simulieren
 		std::cout << "Globale Zeit: " << dGlobaleZeit << std::endl;
 		w.vSimulieren();
 		Fahrzeug::vKopf();
@@ -587,28 +587,35 @@ void vAufgabe_5() {
 	// Wurde ein Simulationsobjekt mit dem Namen: "A1", und mit dem Id: 3 erstellt
 	//  ID |            Name |  Laenge | Fahrzeuge
 	// -----------------------------------------------
-	//   3                A1 :  100.00 (BMW Audi BMX)
+	//   3                A1 :  100.00 (Audi BMW BMX)
 	// Globale Zeit: 0.00
 	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------
-	//   0               BMW                 180.00              0.00                   0.00
 	//   1              Audi                 220.00              0.00                   0.00
+	//   0               BMW                 180.00              0.00                   0.00
 	//   2               BMX                  45.00              0.00                   0.00
-	// Globale Zeit: 0.50
+	// Globale Zeit: 0.30
 	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------
-	//   0               BMW                 180.00             90.00                  90.00
-	//   1              Audi                 220.00            100.00                 100.00
-	//   2               BMX                  45.00             22.50                  22.50
-	// Globale Zeit: 1.00
-	// Fahrzeug "Audi" hat das Ende des Weges "A1" erreicht.
+	//   1              Audi                 220.00              0.00                   0.00
+	//   0               BMW                 180.00             54.00                  54.00
+	//   2               BMX                  45.00             13.50                  13.50
+	// Globale Zeit: 0.60
+	// Fahrzeug "Audi" startet auf Weg "A1" um Zeit 0.60.
 	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------
+	//   1              Audi                 220.00              0.00                   0.00
 	//   0               BMW                 180.00            100.00                 100.00
-	//   1              Audi                 220.00            100.00                 100.00
-	//   2               BMX                  45.00             45.00                  45.00
-	// Wurde ein Simulationsobjekt mit dem Namen: "BMW", und mit dem Id: 0 gelöscht
+	//   2               BMX                  45.00             27.00                  27.00
+	// Globale Zeit: 0.90
+	// Fahrzeug "BMW" hat das Ende des Weges "A1" erreicht.
+	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
+	// -----------------------------------------------------------------------------------------------------------------------------------------------------
+	//   1              Audi                 220.00              0.00                   0.00
+	//   0               BMW                 180.00            100.00                 100.00
+	//   2               BMX                  45.00             40.50                  40.50
 	// Wurde ein Simulationsobjekt mit dem Namen: "Audi", und mit dem Id: 1 gelöscht
+	// Wurde ein Simulationsobjekt mit dem Namen: "BMW", und mit dem Id: 0 gelöscht
 	// Wurde ein Simulationsobjekt mit dem Namen: "BMX", und mit dem Id: 2 gelöscht
 	// Wurde ein Simulationsobjekt mit dem Namen: "A1", und mit dem Id: 3 gelöscht
 }

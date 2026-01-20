@@ -148,7 +148,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
    
 - [x] 3. Testen Sie Ihre neue Klasse in `vAufgabe_5()`, indem Sie einen Weg und drei Fahrzeuge erzeugen, diese auf den Weg setzen und den Weg simulieren.
    
-- [ ] 4. Der Simulation sollen nun parkende Fahrzeuge hinzugefügt werden. Parkende Fahrzeuge benötigen ein anderes Verhaltensmuster, da diese sich nicht fortbewegen. Erweitern Sie dazu die Klasse **Verhalten** zu einer Klassenhierarchie, wobei Sie zwei Klassen **Fahren** und **Parken** von **Verhalten** ableiten. 
+- [x] 4. Der Simulation sollen nun parkende Fahrzeuge hinzugefügt werden. Parkende Fahrzeuge benötigen ein anderes Verhaltensmuster, da diese sich nicht fortbewegen. Erweitern Sie dazu die Klasse **Verhalten** zu einer Klassenhierarchie, wobei Sie zwei Klassen **Fahren** und **Parken** von **Verhalten** ableiten. 
    
    **Verhalten** soll als _abstrakte Oberklasse_ implementiert werden. **Fahren** soll funktionieren wie vorher **Verhalten**. Implementieren Sie daher für **Fahren** den Code nicht doppelt, sondern übernehmen diesen. Die Klasse **Parken** hat einen Konstruktor, der zusätzlich zum Weg den Startzeitpunkt des Fahrzeugs übergeben bekommt. `Parken::dStrecke()` liefert bis zum Erreichen des Startzeitpunktes den Wert 0.0 zurück. Wenn die Startzeit erreicht wurde, soll das Programm auch hier zunächst eine entsprechende Meldung ausgeben.
    
@@ -156,7 +156,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
    
    Überladen Sie entsprechend auch die Funktion `Fahrzeug::vNeueStrecke`. Fügen Sie fahrende Fahrzeuge hinten in die Liste an, parkende Fahrzeuge vorne. Diese Eigenschaft werden wir später noch benötigen.
    
-- [ ] 5. Modifizieren Sie `vAufgabe_5` mehrfach so, dass das Programm beim Starten bzw. am Streckenende entsprechende Meldungen ausgibt. Alternativ können Sie dies auch mit Hilfe des Debuggers testen.
+- [x] 5. Modifizieren Sie `vAufgabe_5` mehrfach so, dass das Programm beim Starten bzw. am Streckenende entsprechende Meldungen ausgibt. Alternativ können Sie dies auch mit Hilfe des Debuggers testen.
 ## 5.6 Grafische Ausgabe
 
 - [ ] 1. Um die Simulation anschaulicher zu machen, soll sie nun grafisch dargestellt werden. Dazu wurde ein Client/Server-Modell entwickelt, bei dem der Server vom Client über TCP/IP Kommandos empfängt und diese dann in eine grafische Darstellung umsetzt.
