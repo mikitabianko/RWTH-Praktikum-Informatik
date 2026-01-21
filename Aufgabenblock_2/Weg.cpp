@@ -30,6 +30,8 @@ double Weg::dGetTempolimit() const {
 }
 
 void Weg::vSimulieren() {
+    p_pFahrzeuge.vAktualisieren();
+
     for (auto& u_ptr : p_pFahrzeuge) {
         if (u_ptr) { 
             try {
@@ -81,7 +83,7 @@ void Weg::vAnnahme(std::unique_ptr<Fahrzeug> aFzg, double dStartzeit) {
 
 std::unique_ptr<Fahrzeug> Weg::pAbgabe(const Fahrzeug& aFzg) {
     for (auto it = p_pFahrzeuge.begin(); it != p_pFahrzeuge.end(); ++it) {
-        if ((*it).get() == &aFzg) {
+        if (*it && (*it).get() == &aFzg) {
             std::unique_ptr<Fahrzeug> local = std::move(*it);
             p_pFahrzeuge.erase(it);
             return local;

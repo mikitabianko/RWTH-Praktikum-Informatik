@@ -245,7 +245,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
     - `void erase(iterator it)`: löscht das Element an Position _it_
     - `void vAktualisieren()`: aktualisiert `p_objekte`
     - `void clear()`: aktualisiert die Liste und löscht dann alle Elemente in `p_objekte`
-- [ ] 2. Testen Sie in `vAufgabe_6a()` Ihre neue `VListe`, indem Sie eine `vertagt::VListe` von ganzzahligen Zufallszahlen zwischen 1 und 10 erzeugen. Folgende Aktionen sollen nacheinander auf der Liste ausgeführt werden:
+- [x] 2. Testen Sie in `vAufgabe_6a()` Ihre neue `VListe`, indem Sie eine `vertagt::VListe` von ganzzahligen Zufallszahlen zwischen 1 und 10 erzeugen. Folgende Aktionen sollen nacheinander auf der Liste ausgeführt werden:
     - Liste ausgeben
     - innerhalb einer Schleife alle Elemente $> 5$ mit `erase()` löschen
     - Liste wieder ausgeben (da `vAktualisieren()` noch nicht ausgeführt wurde, sollte hier dieselbe Ausgabe erfolgen)
@@ -263,7 +263,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
     
     Kurz: Wir setzen einen pseudo-random Generator ein, um Zufallszahlen zu erzeugen. In Zeile 1 erzeugen wir eine statische Variable (`device`), die den benutzten Algorithmus (`mt19937`, d.h. Mersenne-Twister-Engine) und den Initialwert (`seed`) festlegt. In Zeile 2 erzeugen wir eine Verteilung (Gleichverteilung mit Integerzahlen) und legen das gewünschte Intervall $[a, b]$ fest. In Zeile 3 wird mit Hilfe des Generators und der Verteilung eine entsprechende Zufallszahl bestimmt. Mehrere Zufallszahlen werden durch wiederholten Aufruf von `dist(device)` erzeugt. Für Details schauen Sie sich die Bibliothek `<random>` an. **Beachte**: Wir wollen reproduzierbare Ergebnisse erhalten, daher wählen wir einen festen Wert für `seed (0)`.
     
-- [ ] 3. Ersetzen Sie nun bei der Fahrzeugliste in _Weg_ die einfache Liste durch eine entsprechende `vertagt::VListe`. Sie sollten vor und nach jeder Simulation von Weg die Liste aktualisieren. Beachten Sie, dass Sie gegenüber der Nutzung des Templates für Integer bei der Nutzung mit `unique_ptr` noch Anpassungen zum Besitzwechsel durchführen müssen. Testen Sie nun nochmal `vAufgabe_6()`. Die eventuell aufgetretene Speicherschutzverletzung sollte nun nicht mehr auftreten. Achten Sie darauf, ob die Fahrzeuge in der Liste richtig umgesetzt und am Ende des Weges aus der Liste gelöscht werden. Kontrollieren Sie, ob auch die entsprechenden Fahrzeugobjekte automatisch gelöscht werden.
+- [x] 3. Ersetzen Sie nun bei der Fahrzeugliste in _Weg_ die einfache Liste durch eine entsprechende `vertagt::VListe`. Sie sollten vor und nach jeder Simulation von Weg die Liste aktualisieren. Beachten Sie, dass Sie gegenüber der Nutzung des Templates für Integer bei der Nutzung mit `unique_ptr` noch Anpassungen zum Besitzwechsel durchführen müssen. Testen Sie nun nochmal `vAufgabe_6()`. Die eventuell aufgetretene Speicherschutzverletzung sollte nun nicht mehr auftreten. Achten Sie darauf, ob die Fahrzeuge in der Liste richtig umgesetzt und am Ende des Weges aus der Liste gelöscht werden. Kontrollieren Sie, ob auch die entsprechenden Fahrzeugobjekte automatisch gelöscht werden.
 
 ## 5.8 Aufbau des Verkehrssystems
 

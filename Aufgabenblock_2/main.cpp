@@ -14,6 +14,7 @@
 #include "Utils.h"
 #include "Weg.h"
 #include "SimuClient.h"
+#include <random>
 
 // double dGlobaleZeit;
 // double dEpsilon = 1e-4;
@@ -766,6 +767,62 @@ void vAufgabe_6() {
 	}
 }
 
+void vAufgabe_6a() {
+	auto ausgeben = [](const vertagt::VListe<int>& l) {
+        for (const auto& val : l) {
+            std::cout << val << " ";
+        }
+        std::cout << std::endl;
+    };
+
+    vertagt::VListe<int> liste;
+
+    static std::mt19937 device(0);
+    std::uniform_int_distribution<int> dist(1, 10);
+
+    for (int i = 0; i < 10; ++i) {
+        int zuf = dist(device);
+        liste.push_back(zuf);
+    }
+
+    liste.vAktualisieren();  // Aktualisieren nach dem Befüllen
+
+    std::cout << "Initiale Liste:" << std::endl;
+    ausgeben(liste);
+
+    for (auto it = liste.begin(); it != liste.end(); ) {
+        if (*it > 5) {
+            liste.erase(it++);
+        } else {
+            ++it;
+        }
+    }
+
+    std::cout << "Nach erase (vor Aktualisieren):" << std::endl;
+    ausgeben(liste);
+
+    liste.vAktualisieren();
+
+    std::cout << "Nach Aktualisieren:" << std::endl;
+    ausgeben(liste);
+
+    liste.push_front(0);
+    liste.push_back(11);
+
+    liste.vAktualisieren();  // Aktualisieren nach den neuen pushes
+
+    std::cout << "Nach Einfügen und Aktualisieren:" << std::endl;
+    ausgeben(liste);
+	// Initiale Liste:
+	// 6 1 4 4 8 10 4 6 3 5 
+	// Nach erase (vor Aktualisieren):
+	// 6 1 4 4 8 10 4 6 3 5 
+	// Nach Aktualisieren:
+	// 1 4 4 4 3 5 
+	// Nach Einfügen und Aktualisieren:
+	// 0 1 4 4 4 3 5 11 
+}
+
 int main() {
 
 	// vAufgabe_1();
@@ -782,6 +839,7 @@ int main() {
 	// vAufgabe_4();
 	// vAufgabe_5();
 	vAufgabe_6();
+	// vAufgabe_6a();
 
 	return 0;
 }
