@@ -211,3 +211,56 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
 - [x] 4. Lassen Sie die Fahrzeuge nach jeder Simulation in Weg zeichnen.
    
 - [x] 5. Führen Sie Ihre Simulation aus. Um die Simulation besser verfolgen zu können, rufen Sie die Funktion `vSleep` in Ihrer Schleife auf. Je nach Rechenleistung des verwendeten Computers können Sie die Verzögerung anpassen (100ms).
+
+## 5.7 Verzögertes Update (Template)
+
+- [ ] 1. Wenn die Ausnahmesituationen aus der vorigen Teilaufgabe eintreten, soll nun auch die entsprechende Aktion ausgeführt werden:
+	- **Fahrzeug startet**: Die parkenden Fahrzeuge sollen vorne, die fahrenden Fahrzeuge hinten in der Liste stehen. Benutzen Sie daher für die Aufnahme der Fahrzeuge entsprechend push_front() bzw. push_back(). Die Liste hat dann folgenden Aufbau:
+	  `parkend... am weitesten auf Weg \quad fahrend... am Weganfang \quad fahrend...`
+	  
+	  Zum Starten muss das parkende Fahrzeug aus der Liste entfernt und als fahrendes Fahrzeug sofort wieder gespeichert werden. Schreiben Sie zum Löschen der Fahrzeuge aus der Liste eine Funktion `unique_ptr<Fahrzeug> Weg::pAbgabe(const Fahrzeug&)`. In dieser Funktion suchen Sie in der gespeicherten  `list<unique_ptr<Fahrzeug>>` nach dem übergebenen Fahrzeug. Benutzen Sie zum Vergleich der Fahrzeuge den operator. Beachten Sie den Sonderfall eines Nullpointers. Wenn Sie das Fahrzeug in der Liste gefunden haben, verschieben (move) Sie den unique_ptr in eine lokale Variable und löschen dann das Fahrzeug aus der Liste. Anschließend können Sie den lokal gespeicherten Pointer zurückgeben. Mit den Funktionen Weg::pAbgabe und Weg::vAnnahme kann nun die Bearbeitungsfunktion von Losfahren entsprechend angepasst werden.
+	  
+    - **Fahrzeug kommt am Wegende an**: Passen Sie die Bearbeitungsfunktion von _Streckenende_ so an, dass am Streckenende ankommende Fahrzeuge aus der Liste entfernt werden.
+      
+    Testen Sie diese Funktionen: Führen Sie dazu `vAufgabe_6()` nochmals aus. Je nach Implementierung sollte es nun zu einer Fehlermeldung bei der Simulation des Weges kommen, da der Iterator über die Fahrzeuge nach dem Löschen bzw. Umsetzen eines Fahrzeugs nicht mehr definiert ist und so der Nachfolger nicht mehr bestimmt werden kann. Ebenso ist es möglich, dass Simulationsschritte von Fahrzeugen fehlen, da in der Liste durch Umsetzen von Elementen diese nach hinten oder vorne gerutscht sind.
+    
+	Um diese Probleme zu vermeiden, soll eine allgemeine Templateklasse `VListe` im Namensbereich `vertagt` implementiert werden, die das Einfügen und Löschen von Elementen bis zum Aufruf einer Methode `vAktualisieren` aufschiebt. Zur Vereinfachung geben wir Ihnen das Gerüst der Templateklassen in Form der Dateien `vertagt_liste.h` und `vertagt_aktion.h` vor (Die Dateien finden Sie in den Vorgabedateien in Moodle). Fügen Sie diese Dateien ihrem Projekt hinzu und ergänzen Sie in diesen Dateien alle Bereiche, die mit `[...]` gekennzeichnet sind. Um sicherzugehen, dass Sie alle diese Bereich gefunden haben, können Sie die Dateien in Eclipse mit der Tastenkombination $Strg + F$ durchsuchen.
+    
+    Die Klasse VListe hat zwei Datenelemente:
+    - a) die Liste mit den eigentlichen Objekten (`list<T> p_objekte`) mit den zu speichernden Elementen vom Templatetyp `T`
+    - b) eine Liste zum Zwischenspeichern der noch auszuführenden Aktionen (`list<unique_ptr<VAktion>> p_aktionen`).
+    
+    Wir unterscheiden bei der Liste zwischen Lese- und Schreibfunktionen. Leseoperationen können sofort auf der eigentlichen Liste durchgeführt werden, Schreiboperationen müssen als Aktion zwischengespeichert werden. ![image](https://github.com/mikitabianko/RWTH-Praktikum-Informatik/blob/master/assets/image2.png?raw=true)
+    
+    Für die Schreib-Aktionen wird eine Klassenhierarchie mit einer abstrakten Oberklasse `VAktion` angelegt, siehe Figure 5.3, die lediglich die Funktion `vAusfuehren()` und eine Referenz auf die zu bearbeitende Liste (`p_pListe`) beinhaltet. Für jede Schreibfunktion wird eine zugehörige Unterklasse von `VAktion`, also `VPushFront`, `VPushBack` und `VErase` abgeleitet. Dem Konstruktor der Unterklassen wird der jeweilige Parameter der Schreibfunktion und eine Referenz auf die eigentliche Liste übergeben, da sonst kein Zugriff auf die Liste möglich wäre. Die in den Unterklassen überschriebene Funktion `vAusfuehren()` führt dann die eigentliche Operation aus.
+    
+    Die Funktion `vAktualisieren()` der `VListe` durchläuft die Liste der anstehenden Aktionen und arbeitet jedes Element mit der Methode `vAusfuehren()` ab. Beachten Sie, dass die benutzten Objekte aus der Aktionsliste entfernt werden. Die Funktionsweise von `VListe` ist in Figure 5.2 nochmal schematisch dargestellt.
+    
+    Folgende Funktionen sollen für die vertagte Liste implementiert werden:
+    - `iterator begin()`: gibt einen Iterator zurück, der auf das erste Element zeigt
+    - `iterator end()`: gibt einen Iterator zurück, der hinter das letzte Element zeigt
+    - `bool empty()`: gibt zurück, ob das Objekt keine Elemente enthält
+    - `void push_front(T obj)`: fügt _obj_ vor dem ersten Element ein
+    - `void push_back(T obj)`: fügt _obj_ am Ende ein
+    - `void erase(iterator it)`: löscht das Element an Position _it_
+    - `void vAktualisieren()`: aktualisiert `p_objekte`
+    - `void clear()`: aktualisiert die Liste und löscht dann alle Elemente in `p_objekte`
+- [ ] 2. Testen Sie in `vAufgabe_6a()` Ihre neue `VListe`, indem Sie eine `vertagt::VListe` von ganzzahligen Zufallszahlen zwischen 1 und 10 erzeugen. Folgende Aktionen sollen nacheinander auf der Liste ausgeführt werden:
+    - Liste ausgeben
+    - innerhalb einer Schleife alle Elemente $> 5$ mit `erase()` löschen
+    - Liste wieder ausgeben (da `vAktualisieren()` noch nicht ausgeführt wurde, sollte hier dieselbe Ausgabe erfolgen)
+    - `vAktualisieren()` auf die _Liste_ anwenden
+    - Liste nochmal ausgeben (jetzt sollte sich die _Liste_ geändert haben)
+    - Zum Schluss fügen Sie am Anfang und am Ende der Liste noch zwei beliebige (verschiedene) Zahlen ein und geben die Liste zur Kontrolle nochmal aus.
+    
+    Tipp: Eine ganzzahlige Zufallszahl zwischen $a$ und $b$ ermitteln Sie wie folgt: 
+    ```cpp 
+    #include <random>
+    static std::mt19937 device(seed);
+    std::uniform_int_distribution<int> dist(a, b);
+    int zuf = dist(device);
+    ```
+    
+    Kurz: Wir setzen einen pseudo-random Generator ein, um Zufallszahlen zu erzeugen. In Zeile 1 erzeugen wir eine statische Variable (`device`), die den benutzten Algorithmus (`mt19937`, d.h. Mersenne-Twister-Engine) und den Initialwert (`seed`) festlegt. In Zeile 2 erzeugen wir eine Verteilung (Gleichverteilung mit Integerzahlen) und legen das gewünschte Intervall $[a, b]$ fest. In Zeile 3 wird mit Hilfe des Generators und der Verteilung eine entsprechende Zufallszahl bestimmt. Mehrere Zufallszahlen werden durch wiederholten Aufruf von `dist(device)` erzeugt. Für Details schauen Sie sich die Bibliothek `<random>` an. **Beachte**: Wir wollen reproduzierbare Ergebnisse erhalten, daher wählen wir einen festen Wert für `seed (0)`.
+    
+- [ ] 3. Ersetzen Sie nun bei der Fahrzeugliste in _Weg_ die einfache Liste durch eine entsprechende `vertagt::VListe`. Sie sollten vor und nach jeder Simulation von Weg die Liste aktualisieren. Beachten Sie, dass Sie gegenüber der Nutzung des Templates für Integer bei der Nutzung mit `unique_ptr` noch Anpassungen zum Besitzwechsel durchführen müssen. Testen Sie nun nochmal `vAufgabe_6()`. Die eventuell aufgetretene Speicherschutzverletzung sollte nun nicht mehr auftreten. Achten Sie darauf, ob die Fahrzeuge in der Liste richtig umgesetzt und am Ende des Weges aus der Liste gelöscht werden. Kontrollieren Sie, ob auch die entsprechenden Fahrzeugobjekte automatisch gelöscht werden.
