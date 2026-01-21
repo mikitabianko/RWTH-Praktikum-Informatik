@@ -1,11 +1,13 @@
 #include "Simulationsobjekt.h"
 
 Simulationsobjekt::Simulationsobjekt() : p_sName(""), p_iID(p_iMaxID) {
+	p_dLetzteAktualisierung = dGlobaleZeit;
     ++p_iMaxID;
     std::cout << "Wurde ein Simulationsobjekt mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " erstellt\n";
 }
 
 Simulationsobjekt::Simulationsobjekt(std::string sName) : p_sName(sName), p_iID(p_iMaxID) {
+	p_dLetzteAktualisierung = dGlobaleZeit;
     ++p_iMaxID;
     std::cout << "Wurde ein Simulationsobjekt mit dem Namen: \"" << p_sName << "\", und mit dem Id: " << p_iID << " erstellt\n";
 }
@@ -32,6 +34,10 @@ void Simulationsobjekt::vAusgeben(std::ostream& o) const {
     o << std::resetiosflags(std::ios::left) << std::setiosflags(std::ios::right)
       << std::setw(3) << p_iID
       << std::setw(18) << p_sName;
+}
+
+double Simulationsobjekt::getLetzteAktualisierung() const{
+	return p_dLetzteAktualisierung;
 }
 
 std::ostream& operator<<(std::ostream& o, const Simulationsobjekt& obj) {

@@ -14,6 +14,7 @@ private:
 
 protected:
     double p_dZeit = 0.0;  // Lokale Simulationszeit
+    double p_dLetzteAktualisierung = 0;
 
 public:
     Simulationsobjekt();
@@ -30,6 +31,8 @@ public:
     
     bool operator==(const Simulationsobjekt& other) const;
     std::string sGetName() const { return p_sName; }
+
+    double getLetzteAktualisierung() const;
 };
 
 std::ostream& operator<<(std::ostream& o, const Simulationsobjekt& obj);

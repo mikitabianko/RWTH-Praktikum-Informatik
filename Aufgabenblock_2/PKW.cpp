@@ -26,33 +26,21 @@ double PKW::dTanken(double dMenge) {
 }
 
 void PKW::vSimulieren() {
+    if (p_dTankinhalt == 0)
+		return;
+
     double dZeitDiff = dGlobaleZeit - p_dZeit;
-    if (dZeitDiff <= 0.0) return;
+    if (dZeitDiff <= 0.0 && p_dLetzteAktualisierung != dGlobaleZeit) return;
+    p_dLetzteAktualisierung = dGlobaleZeit;
 
     double dGeschwindigkeit = p_dMaxGeschwindigkeit;
 
-    // verbrauch pro 100 km = [liter / 100km]
-    // verbrauch pro 1 km = (verbrauch pro 100 km) / 100 => [liter / km]
-    // Geschwindigkeit = [km / h]
-    // Verbrauch pro Stunde = [Verbrauch pro 1 km] * Geschwingigkeit => [liter / h]
-    double dVerbrauchProStunde = (p_dVerbrauch / 100.0) * dGeschwindigkeit; // [liter / h]
+    double dVerbrauchProStunde = (p_dVerbrauch / 100.0) * dGeschwindigkeit; 
     double dVerbrauchProSchritt = dVerbrauchProStunde * dZeitDiff;
-
-    //if (p_dTankinhalt >= dVerbrauchProSchritt || bIsGleich(p_dTankinhalt, dVerbrauchProSchritt, dEpsilon)) {
     
     Fahrzeug::vSimulieren();
     p_dTankinhalt -= dVerbrauchProSchritt;
     if (p_dTankinhalt < 0 || bIsGleich(p_dTankinhalt, dVerbrauchProSchritt, dEpsilon)) p_dTankinhalt = 0.0;  
-    
-    //} else if (p_dTankinhalt > 0.0) {
-    //     double dMaxZeit = p_dTankinhalt / dVerbrauchProStunde; // [liter * h / liter] = [h]
-
-    //     double dStrecke = dGeschwindigkeit * dMaxZeit;
-    //     p_dGesamtStrecke += dStrecke;
-    //     p_dGesamtZeit += dMaxZeit;
-    //     p_dZeit = dGlobaleZeit;
-    //     p_dTankinhalt = 0.0;
-    // }
 }
 
 void PKW::vAusgeben(std::ostream& o) const {
