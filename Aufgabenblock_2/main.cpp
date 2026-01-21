@@ -640,6 +640,7 @@ void vAufgabe_6() {
 		w2.vAnnahme(std::move(fzg3));  // Fahrend auf w2 (kein Limit, da kein PKW)
 
 		// Simulationsschleife
+		dGlobaleZeit = 0;
 		double dIntervall = 0.4;
 		for (int i = 0; i < 4; ++i) {
 			dGlobaleZeit += dIntervall;
@@ -654,118 +655,115 @@ void vAufgabe_6() {
 			for (const auto& fzg : w1.pGetFahrzeuge()) std::cout << *fzg << std::endl;
 			for (const auto& fzg : w2.pGetFahrzeuge()) std::cout << *fzg << std::endl;
 		}
+		// Test der Ausnahmen und Tempolimit:
+		// Wurde ein Simulationsobjekt mit dem Namen: "A1_Autobahn", und mit dem Id: 0 erstellt
+		// Wurde ein Simulationsobjekt mit dem Namen: "Stadtstrasse", und mit dem Id: 1 erstellt
+		// Wurde ein Simulationsobjekt mit dem Namen: "PKW1", und mit dem Id: 2 erstellt
+		// Wurde ein Simulationsobjekt mit dem Namen: "PKW2", und mit dem Id: 3 erstellt
+		// Wurde ein Simulationsobjekt mit dem Namen: "Fzg3", und mit dem Id: 4 erstellt
+
+		// Zeit: 0.40
+		//  ID |            Name |  Laenge | Fahrzeuge
+		// -----------------------------------------------
+		//   0       A1_Autobahn :  100.00 (PKW1)
+		//   1      Stadtstrasse :   50.00 (PKW2 Fzg3)
+		//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
+		// -----------------------------------------------------------------------------------------------------------------------------------------------------
+		//   2              PKW1                 180.00             72.00                  72.00                5.04          22.46                            -
+		//   3              PKW2                  60.00              0.00                   0.00                0.00          25.58                            -
+		//   4              Fzg3                  45.00             18.00                  18.00
+
+		// Zeit: 0.80
+		//  ID |            Name |  Laenge | Fahrzeuge
+		// -----------------------------------------------
+		//   0       A1_Autobahn :  100.00 (PKW1)
+		//   1      Stadtstrasse :   50.00 (PKW2 Fzg3)
+		//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
+		// -----------------------------------------------------------------------------------------------------------------------------------------------------
+		//   2              PKW1                 180.00            100.00                 100.00                7.00          17.42                            -
+		//   3              PKW2                  60.00              0.00                   0.00                0.00          23.66                            -
+		//   4              Fzg3                  45.00             36.00                  36.00
+
+		// Zeit: 1.20
+		// Streckenende-Ausnahme: Fahrzeug "PKW1" hat Ende des Wegs "A1_Autobahn" erreicht.
+		// Losfahren-Ausnahme: Fahrzeug "PKW2" auf Weg "Stadtstrasse".
+		//  ID |            Name |  Laenge | Fahrzeuge
+		// -----------------------------------------------
+		//   0       A1_Autobahn :  100.00 (PKW1)
+		//   1      Stadtstrasse :   50.00 (PKW2 Fzg3)
+		//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
+		// -----------------------------------------------------------------------------------------------------------------------------------------------------
+		//   2              PKW1                 180.00            100.00                 100.00                7.00          17.42                            -
+		//   3              PKW2                  60.00              0.00                   0.00                0.00          23.66                            -
+		//   4              Fzg3                  45.00             50.00                  50.00
+
+		// Zeit: 1.60
+		// Streckenende-Ausnahme: Fahrzeug "PKW1" hat Ende des Wegs "A1_Autobahn" erreicht.
+		// Losfahren-Ausnahme: Fahrzeug "PKW2" auf Weg "Stadtstrasse".
+		// Streckenende-Ausnahme: Fahrzeug "Fzg3" hat Ende des Wegs "Stadtstrasse" erreicht.
+		//  ID |            Name |  Laenge | Fahrzeuge
+		// -----------------------------------------------
+		//   0       A1_Autobahn :  100.00 (PKW1)
+		//   1      Stadtstrasse :   50.00 (PKW2 Fzg3)
+		//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
+		// -----------------------------------------------------------------------------------------------------------------------------------------------------
+		//   2              PKW1                 180.00            100.00                 100.00                7.00          17.42                            -
+		//   3              PKW2                  60.00              0.00                   0.00                0.00          23.66                            -
+		//   4              Fzg3                  45.00             50.00                  50.00
+		// Wurde ein Simulationsobjekt mit dem Namen: "PKW2", und mit dem Id: 3 gelöscht
+		// Wurde ein Simulationsobjekt mit dem Namen: "Fzg3", und mit dem Id: 4 gelöscht
+		// Wurde ein Simulationsobjekt mit dem Namen: "Stadtstrasse", und mit dem Id: 1 gelöscht
+		// Wurde ein Simulationsobjekt mit dem Namen: "PKW1", und mit dem Id: 2 gelöscht
+		// Wurde ein Simulationsobjekt mit dem Namen: "A1_Autobahn", und mit dem Id: 0 gelöscht
+	} 
+	{
+		std::cout << "\nTest mit Grafik (5.6)\n";
+
+		// Grafik initialisieren
+		if (!bInitialisiereGrafik(800, 500)) {
+			std::cerr << "Fehler beim Initialisieren der Grafik!" << std::endl;
+			return;
+		}
+
+		Weg wHin("A1_Hin", 500.0, Tempolimit::Autobahn);
+		Weg wRueck("A1_Rueck", 500.0, Tempolimit::Autobahn);
+
+		int koordinaten[] = {700, 250, 100, 250}; 
+		int anzahlKoord = 2;  
+
+		if (!bZeichneStrasse(wHin.sGetName(), wRueck.sGetName(), 500, anzahlKoord, koordinaten)) {
+			std::cerr << "Fehler beim Zeichnen der Straße!" << std::endl;
+		}
+
+		auto pkw1 = std::make_unique<PKW>("PKW_BMW", 100.0, 10);
+		auto rad1 = std::make_unique<Fahrrad>("Rad_BMX", 30.0);
+
+		wHin.vAnnahme(std::move(pkw1));
+		wHin.vAnnahme(std::move(rad1), 3.0);  
+
+		dGlobaleZeit = 0;
+		double dIntervall = 0.02;  
+		for (int i = 0; i < 400; ++i) { 
+			dGlobaleZeit += dIntervall;
+
+			vSetzeZeit(dGlobaleZeit);  // Zeit in Titel anzeigen
+
+			wHin.vSimulieren();
+			wRueck.vSimulieren();  
+
+			// Alle Fahrzeuge zeichnen
+			for (const auto& fzgPtr : wHin.pGetFahrzeuge()) {
+				fzgPtr->vZeichnen(wHin);
+			}
+			for (const auto& fzgPtr : wRueck.pGetFahrzeuge()) {
+				fzgPtr->vZeichnen(wRueck);
+			}
+
+			vSleep(100);
+		}
+
+		vBeendeGrafik();  // Am Ende schließen
 	}
-
-	std::cout << "\nTest mit Grafik (5.6)\n";
-
-    // Grafik initialisieren
-    if (!bInitialisiereGrafik(800, 500)) {
-        std::cerr << "Fehler beim Initialisieren der Grafik!" << std::endl;
-        return;
-    }
-
-	// Zwei Wege à 500 km (grafisch als Hin- und Rückweg)
-    Weg wHin("A1_Hin", 500.0, Tempolimit::Autobahn);
-    Weg wRueck("A1_Rueck", 500.0, Tempolimit::Autobahn);
-
-    // Straße zeichnen (Hin + Rück als eine Straße)
-    int koordinaten[] = {700, 250, 100, 250};  // Gerade von rechts nach links
-    int anzahlKoord = 2;  // 2 Punkte → 4 Werte im Array
-
-    if (!bZeichneStrasse(wHin.sGetName(), wRueck.sGetName(), 500, anzahlKoord, koordinaten)) {
-        std::cerr << "Fehler beim Zeichnen der Straße!" << std::endl;
-    }
-
-    // Fahrzeuge (Beispiel: PKW und Fahrrad)
-    auto pkw1 = std::make_unique<PKW>("PKW_BMW", 180.0, 5);
-    auto rad1 = std::make_unique<Fahrrad>("Rad_Lisa", 30.0);
-
-    wHin.vAnnahme(std::move(pkw1));
-    wHin.vAnnahme(std::move(rad1), 1.0);  // Parkend, startet später
-
-    // Simulationsschleife mit Grafik-Update
-    double dIntervall = 0.05;  // Kleiner für flüssigere Grafik
-    for (int i = 0; i < 400; ++i) {  // ca. 20 Stunden simulieren
-        dGlobaleZeit += dIntervall;
-
-        vSetzeZeit(dGlobaleZeit);  // Zeit in Titel anzeigen
-
-        wHin.vSimulieren();
-        wRueck.vSimulieren();  // falls Rückweg genutzt
-
-        // Alle Fahrzeuge zeichnen
-        for (const auto& fzgPtr : wHin.pGetFahrzeuge()) {
-            fzgPtr->vZeichnen(wHin);
-        }
-        for (const auto& fzgPtr : wRueck.pGetFahrzeuge()) {
-            fzgPtr->vZeichnen(wRueck);
-        }
-
-        vSleep(100);  // 100 ms Pause → ca. 10 FPS
-    }
-
-    vBeendeGrafik();  // Am Ende schließen
-
-	// Test der Ausnahmen und Tempolimit:
-	// Wurde ein Simulationsobjekt mit dem Namen: "A1_Autobahn", und mit dem Id: 0 erstellt
-	// Wurde ein Simulationsobjekt mit dem Namen: "Stadtstrasse", und mit dem Id: 1 erstellt
-	// Wurde ein Simulationsobjekt mit dem Namen: "PKW1", und mit dem Id: 2 erstellt
-	// Wurde ein Simulationsobjekt mit dem Namen: "PKW2", und mit dem Id: 3 erstellt
-	// Wurde ein Simulationsobjekt mit dem Namen: "Fzg3", und mit dem Id: 4 erstellt
-
-	// Zeit: 0.40
-	//  ID |            Name |  Laenge | Fahrzeuge
-	// -----------------------------------------------
-	//   0       A1_Autobahn :  100.00 (PKW1)
-	//   1      Stadtstrasse :   50.00 (PKW2 Fzg3)
-	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
-	// -----------------------------------------------------------------------------------------------------------------------------------------------------
-	//   2              PKW1                 180.00             72.00                  72.00                5.04          22.46                            -
-	//   3              PKW2                  60.00              0.00                   0.00                0.00          25.58                            -
-	//   4              Fzg3                  45.00             18.00                  18.00
-
-	// Zeit: 0.80
-	//  ID |            Name |  Laenge | Fahrzeuge
-	// -----------------------------------------------
-	//   0       A1_Autobahn :  100.00 (PKW1)
-	//   1      Stadtstrasse :   50.00 (PKW2 Fzg3)
-	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
-	// -----------------------------------------------------------------------------------------------------------------------------------------------------
-	//   2              PKW1                 180.00            100.00                 100.00                7.00          17.42                            -
-	//   3              PKW2                  60.00              0.00                   0.00                0.00          23.66                            -
-	//   4              Fzg3                  45.00             36.00                  36.00
-
-	// Zeit: 1.20
-	// Streckenende-Ausnahme: Fahrzeug "PKW1" hat Ende des Wegs "A1_Autobahn" erreicht.
-	// Losfahren-Ausnahme: Fahrzeug "PKW2" auf Weg "Stadtstrasse".
-	//  ID |            Name |  Laenge | Fahrzeuge
-	// -----------------------------------------------
-	//   0       A1_Autobahn :  100.00 (PKW1)
-	//   1      Stadtstrasse :   50.00 (PKW2 Fzg3)
-	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
-	// -----------------------------------------------------------------------------------------------------------------------------------------------------
-	//   2              PKW1                 180.00            100.00                 100.00                7.00          17.42                            -
-	//   3              PKW2                  60.00              0.00                   0.00                0.00          23.66                            -
-	//   4              Fzg3                  45.00             50.00                  50.00
-
-	// Zeit: 1.60
-	// Streckenende-Ausnahme: Fahrzeug "PKW1" hat Ende des Wegs "A1_Autobahn" erreicht.
-	// Losfahren-Ausnahme: Fahrzeug "PKW2" auf Weg "Stadtstrasse".
-	// Streckenende-Ausnahme: Fahrzeug "Fzg3" hat Ende des Wegs "Stadtstrasse" erreicht.
-	//  ID |            Name |  Laenge | Fahrzeuge
-	// -----------------------------------------------
-	//   0       A1_Autobahn :  100.00 (PKW1)
-	//   1      Stadtstrasse :   50.00 (PKW2 Fzg3)
-	//  ID |            Name |   MaxGeschwindigkeit |   GesamtStrecke |     AbschnittStrecke |   Gesamtverbrauch |   Tankinhalt |   Aktuelle Geschwindigkeit
-	// -----------------------------------------------------------------------------------------------------------------------------------------------------
-	//   2              PKW1                 180.00            100.00                 100.00                7.00          17.42                            -
-	//   3              PKW2                  60.00              0.00                   0.00                0.00          23.66                            -
-	//   4              Fzg3                  45.00             50.00                  50.00
-	// Wurde ein Simulationsobjekt mit dem Namen: "PKW2", und mit dem Id: 3 gelöscht
-	// Wurde ein Simulationsobjekt mit dem Namen: "Fzg3", und mit dem Id: 4 gelöscht
-	// Wurde ein Simulationsobjekt mit dem Namen: "Stadtstrasse", und mit dem Id: 1 gelöscht
-	// Wurde ein Simulationsobjekt mit dem Namen: "PKW1", und mit dem Id: 2 gelöscht
-	// Wurde ein Simulationsobjekt mit dem Namen: "A1_Autobahn", und mit dem Id: 0 gelöscht
 }
 
 int main() {

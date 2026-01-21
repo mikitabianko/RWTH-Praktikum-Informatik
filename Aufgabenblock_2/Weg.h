@@ -6,7 +6,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-
+#include "Vertagt_liste.h"
 #include "Simulationsobjekt.h"
 #include "Tempolimit.h"
 
@@ -16,7 +16,7 @@ class Fahrzeug;
 class Weg : public Simulationsobjekt {
 protected:
     double p_dLaenge = 0.0;
-    std::list<std::unique_ptr<Fahrzeug>> p_pFahrzeuge;
+    vertagt::VListe<std::unique_ptr<Fahrzeug>> p_pFahrzeuge;
     Tempolimit p_eTempolimit = Tempolimit::Autobahn;
 
 public:
@@ -39,7 +39,9 @@ public:
 
     double dGetTempolimit() const;
 
-    const std::list<std::unique_ptr<Fahrzeug>>& pGetFahrzeuge() const { return p_pFahrzeuge; }
+    std::unique_ptr<Fahrzeug> pAbgabe(const Fahrzeug& aFzg);
+
+    const vertagt::VListe<std::unique_ptr<Fahrzeug>>& pGetFahrzeuge() const { return p_pFahrzeuge; }
 };
 
 #endif

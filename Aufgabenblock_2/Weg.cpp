@@ -30,14 +30,17 @@ double Weg::dGetTempolimit() const {
 }
 
 void Weg::vSimulieren() {
-    for (auto& pFahrzeug : p_pFahrzeuge) {
-        try {
-            pFahrzeug->vSimulieren();
-        } catch (Fahrausnahme& e) {
-            e.vBearbeiten();
+    for (auto& u_ptr : p_pFahrzeuge) {
+        if (u_ptr) { 
+            try {
+                u_ptr->vSimulieren();
+            } catch (Fahrausnahme& e) {
+                e.vBearbeiten();
+            }
         }
     }
-    p_dZeit = dGlobaleZeit;  
+    p_pFahrzeuge.vAktualisieren();
+    p_dZeit = dGlobaleZeit; 
 }
 
 void Weg::vKopf() {
@@ -54,22 +57,35 @@ void Weg::vAusgeben(std::ostream& o) const {
     Simulationsobjekt::vAusgeben(o);
     o << " : " << std::fixed << std::setprecision(2) << std::setw(7) << p_dLaenge << " (";
     bool bFirst = true;
-    for (const auto& pFahrzeug : p_pFahrzeuge) {
-        if (!bFirst) o << " ";
-        o << pFahrzeug->sGetName();
-        bFirst = false;
+    for (const auto& u_ptr : p_pFahrzeuge) {
+        if (u_ptr) {
+            if (!bFirst) o << " ";
+            o << u_ptr->sGetName();
+            bFirst = false;
+        }
     }
     o << ")";
 }
 
 void Weg::vAnnahme(std::unique_ptr<Fahrzeug> aFzg) {
-    if (!aFzg) return; 
+    if (!aFzg) return;
+    aFzg->vNeueStrecke(*this);
     p_pFahrzeuge.push_back(std::move(aFzg));
-    p_pFahrzeuge.back()->vNeueStrecke(*this);
 }
 
 void Weg::vAnnahme(std::unique_ptr<Fahrzeug> aFzg, double dStartzeit) {
     if (!aFzg) return; 
     aFzg->vNeueStrecke(*this, dStartzeit);
     p_pFahrzeuge.push_front(std::move(aFzg)); // Parkende vorne
+}
+
+std::unique_ptr<Fahrzeug> Weg::pAbgabe(const Fahrzeug& aFzg) {
+    for (auto it = p_pFahrzeuge.begin(); it != p_pFahrzeuge.end(); ++it) {
+        if ((*it).get() == &aFzg) {
+            std::unique_ptr<Fahrzeug> local = std::move(*it);
+            p_pFahrzeuge.erase(it);
+            return local;
+        }
+    }
+    return nullptr;
 }

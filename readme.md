@@ -214,7 +214,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
 
 ## 5.7 Verzögertes Update (Template)
 
-- [ ] 1. Wenn die Ausnahmesituationen aus der vorigen Teilaufgabe eintreten, soll nun auch die entsprechende Aktion ausgeführt werden:
+- [x] 1. Wenn die Ausnahmesituationen aus der vorigen Teilaufgabe eintreten, soll nun auch die entsprechende Aktion ausgeführt werden:
 	- **Fahrzeug startet**: Die parkenden Fahrzeuge sollen vorne, die fahrenden Fahrzeuge hinten in der Liste stehen. Benutzen Sie daher für die Aufnahme der Fahrzeuge entsprechend push_front() bzw. push_back(). Die Liste hat dann folgenden Aufbau:
 	  `parkend... am weitesten auf Weg \quad fahrend... am Weganfang \quad fahrend...`
 	  
