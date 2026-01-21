@@ -102,3 +102,5 @@ void Fahrzeug::vNeueStrecke(Weg& weg, double dStartzeit) {
 double Fahrzeug::dGetAbschnittStrecke() const {
     return p_dAbschnittStrecke;
 }
+
+void Fahrzeug::vZeichnen(const Weg& weg) const {}

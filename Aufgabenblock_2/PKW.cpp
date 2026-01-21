@@ -1,6 +1,7 @@
 #include "PKW.h"
 #include "Verhalten.h"
 #include "Weg.h"
+#include "SimuClient.h"
 
 PKW::PKW(std::string sName, double dMaxGeschwindigkeit,
          double dVerbrauch, double dTankvolumen)
@@ -68,4 +69,15 @@ double PKW::dGeschwindigkeit() const {
         return std::min(p_dMaxGeschwindigkeit, p_pVerhalten->getWeg().dGetTempolimit());
     }
     return p_dMaxGeschwindigkeit;
+}
+
+void PKW::vZeichnen(const Weg& weg) const {
+    double dRelPos = p_dAbschnittStrecke / weg.dGetLaenge();  // 0.0 .. 1.0
+    if (dRelPos < 0.0) dRelPos = 0.0;
+    if (dRelPos > 1.0) dRelPos = 1.0;
+
+    double dAktGeschw = dGeschwindigkeit();
+    double dTank = p_dTankinhalt;  // Oder berechne aktuellen Wert, falls simuliert
+
+    bZeichnePKW(sGetName(), weg.sGetName(), dRelPos, dAktGeschw, dTank);
 }

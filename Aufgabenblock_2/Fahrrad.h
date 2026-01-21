@@ -14,6 +14,8 @@ public:
     double dGeschwindigkeit() const override;
 
     void vAusgeben(std::ostream& o) const override;
+
+    virtual void vZeichnen(const Weg& weg) const override;
 };
 
 #endif // FAHRRAD_H

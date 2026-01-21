@@ -179,7 +179,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
 
 ## 5.6 Grafische Ausgabe
 
-- [ ] 1. Um die Simulation anschaulicher zu machen, soll sie nun grafisch dargestellt werden. Dazu wurde ein Client/Server-Modell entwickelt, bei dem der Server vom Client über TCP/IP Kommandos empfängt und diese dann in eine grafische Darstellung umsetzt.
+- [x] 1. Um die Simulation anschaulicher zu machen, soll sie nun grafisch dargestellt werden. Dazu wurde ein Client/Server-Modell entwickelt, bei dem der Server vom Client über TCP/IP Kommandos empfängt und diese dann in eine grafische Darstellung umsetzt.
    
    Die Grafikschnittstelle wird Ihnen durch die Klassen `SimuClient` und `SimuClientSocket` zur Verfügung gestellt. Der grafische Server wird über die Java-Datei `SimuServer.jar` zur Verfügung gestellt. Um die Grafikschnittstelle nutzen zu können, kopieren Sie zunächst die erforderlichen Dateien (`SimuClient.h`, `SimuClient.cpp`, `SimuClientSocket.h`, `SimuClientSocket.cpp`, `SimuServer.jar`) in Ihr Projektverzeichnis (Verzeichnis mit cpp/h-Dateien, z.B. _Aufgabenblock_2_) in Ihrem Eclipse-Workspace. Die Dateien finden Sie in den Vorgabedateien in Moodle.
    
@@ -204,10 +204,10 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
 	- **`BeendeGrafik()`** Mit dieser Funktion wird die Verbindung zum Grafikserver getrennt, das Fenster wird automatisch geschlossen.
 	- **`void vSleep(int zeit_ms);`** Mit dieser Funktion wird die weitere Programmausführung um _zeit_ms_ Millisekunden verzögert.
 
-- [ ] 2. Erweitern Sie `vAufgabe_6()` so, dass die Grafikausgabe getestet werden kann. Fügen Sie den Header `SimuClient.h` in Ihrer `main.cpp` ein. Wählen Sie als Länge der beiden Wege jeweils 500km und fassen Sie diese grafisch zu einer Straße zusammen (Hin- und Rückweg).
+- [x] 2. Erweitern Sie `vAufgabe_6()` so, dass die Grafikausgabe getestet werden kann. Fügen Sie den Header `SimuClient.h` in Ihrer `main.cpp` ein. Wählen Sie als Länge der beiden Wege jeweils 500km und fassen Sie diese grafisch zu einer Straße zusammen (Hin- und Rückweg).
    
-- [ ] 3. Um beim Zeichnen, abhängig vom Fahrzeugobjekt-Typ, die korrekte Zeichenfunktion aufzurufen, soll für PKW und Fahrrad eine Funktion `vZeichnen(const Weg&)` implementiert werden. Dazu wird in **Fahrzeug** die Funktion virtuell deklariert und in der jeweiligen Unterklasse überschrieben. Die Funktion bekommt den Weg, auf dem das Fahrzeug gezeichnet werden soll, als Referenz übergeben und ruft dann die passende Zeichenfunktion (s.o.) auf.
+- [x] 3. Um beim Zeichnen, abhängig vom Fahrzeugobjekt-Typ, die korrekte Zeichenfunktion aufzurufen, soll für PKW und Fahrrad eine Funktion `vZeichnen(const Weg&)` implementiert werden. Dazu wird in **Fahrzeug** die Funktion virtuell deklariert und in der jeweiligen Unterklasse überschrieben. Die Funktion bekommt den Weg, auf dem das Fahrzeug gezeichnet werden soll, als Referenz übergeben und ruft dann die passende Zeichenfunktion (s.o.) auf.
    
-- [ ] 4. Lassen Sie die Fahrzeuge nach jeder Simulation in Weg zeichnen.
+- [x] 4. Lassen Sie die Fahrzeuge nach jeder Simulation in Weg zeichnen.
    
-- [ ] 5. Führen Sie Ihre Simulation aus. Um die Simulation besser verfolgen zu können, rufen Sie die Funktion `vSleep` in Ihrer Schleife auf. Je nach Rechenleistung des verwendeten Computers können Sie die Verzögerung anpassen (100ms).
+- [x] 5. Führen Sie Ihre Simulation aus. Um die Simulation besser verfolgen zu können, rufen Sie die Funktion `vSleep` in Ihrer Schleife auf. Je nach Rechenleistung des verwendeten Computers können Sie die Verzögerung anpassen (100ms).

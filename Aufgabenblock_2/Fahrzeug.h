@@ -34,6 +34,8 @@ public:
 
 	virtual double dTanken(double dMenge = std::numeric_limits<double>::infinity());
 
+	virtual void vZeichnen(const Weg& weg) const;
+
 	void vNeueStrecke(Weg& weg);
 
 	void vNeueStrecke(Weg& weg, double dStartzeit);

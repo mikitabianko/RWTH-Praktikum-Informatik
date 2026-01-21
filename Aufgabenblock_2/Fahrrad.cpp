@@ -1,6 +1,8 @@
 #include "Fahrrad.h"
 #include <algorithm>
 #include <cmath>
+#include "Weg.h"
+#include "SimuClient.h"
 
 Fahrrad::Fahrrad(std::string sName, double dMaxGeschwindigkeit) : Fahrzeug(sName, dMaxGeschwindigkeit) {
     
@@ -25,4 +27,14 @@ void Fahrrad::vAusgeben(std::ostream& o) const {
               << std::setw(17) << "-"
               << std::setw(12) << "-"
               << std::setw(26) << dAktuelGeschwindigkeit;
+}
+
+void Fahrrad::vZeichnen(const Weg& weg) const {
+    double dRelPos = p_dAbschnittStrecke / weg.dGetLaenge();
+    if (dRelPos < 0.0) dRelPos = 0.0;
+    if (dRelPos > 1.0) dRelPos = 1.0;
+
+    double dAktGeschw = dGeschwindigkeit();
+
+    bZeichneFahrrad(sGetName(), weg.sGetName(), dRelPos, dAktGeschw);
 }

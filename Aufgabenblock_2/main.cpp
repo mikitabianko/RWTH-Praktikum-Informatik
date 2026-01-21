@@ -13,6 +13,7 @@
 #include "PKW.h"
 #include "Utils.h"
 #include "Weg.h"
+#include "SimuClient.h"
 
 // double dGlobaleZeit;
 // double dEpsilon = 1e-4;
@@ -621,37 +622,90 @@ void vAufgabe_5() {
 }
 
 void vAufgabe_6() {
-	std::cout << "Test der Ausnahmen und Tempolimit:\n";
+	{
+		std::cout << "Test der Ausnahmen und Tempolimit:\n";
 
-    // Wege
-    Weg w1("A1_Autobahn", 100.0, Tempolimit::Autobahn);  // Kein Limit
-    Weg w2("Stadtstrasse", 50.0, Tempolimit::Innerorts); // Limit 50
+		// Wege
+		Weg w1("A1_Autobahn", 100.0, Tempolimit::Autobahn);  // Kein Limit
+		Weg w2("Stadtstrasse", 50.0, Tempolimit::Innerorts); // Limit 50
 
-    // Fahrzeuge (PKW für Limit-Test)
-    auto pkw1 = std::make_unique<PKW>("PKW1", 180.0, 7);  // Schnell, aber limitiert auf w2
-    auto pkw2 = std::make_unique<PKW>("PKW2", 60.0, 8);
-    auto fzg3 = std::make_unique<Fahrzeug>("Fzg3", 45.0);
+		// Fahrzeuge (PKW für Limit-Test)
+		auto pkw1 = std::make_unique<PKW>("PKW1", 180.0, 7);  // Schnell, aber limitiert auf w2
+		auto pkw2 = std::make_unique<PKW>("PKW2", 60.0, 8);
+		auto fzg3 = std::make_unique<Fahrzeug>("Fzg3", 45.0);
 
-    // Auf Wege setzen
-    w1.vAnnahme(std::move(pkw1));  // Fahrend auf w1
-    w2.vAnnahme(std::move(pkw2), 1.2);  // Parkend auf w2, Start 0.5
-    w2.vAnnahme(std::move(fzg3));  // Fahrend auf w2 (kein Limit, da kein PKW)
+		// Auf Wege setzen
+		w1.vAnnahme(std::move(pkw1));  // Fahrend auf w1
+		w2.vAnnahme(std::move(pkw2), 1.2);  // Parkend auf w2, Start 0.5
+		w2.vAnnahme(std::move(fzg3));  // Fahrend auf w2 (kein Limit, da kein PKW)
 
-    // Simulationsschleife
-    double dIntervall = 0.4;
-    for (int i = 0; i < 4; ++i) {
-        dGlobaleZeit += dIntervall;
-		std::cout << "\nZeit: " << std::fixed << std::setprecision(2) << dGlobaleZeit << std::endl;
+		// Simulationsschleife
+		double dIntervall = 0.4;
+		for (int i = 0; i < 4; ++i) {
+			dGlobaleZeit += dIntervall;
+			std::cout << "\nZeit: " << std::fixed << std::setprecision(2) << dGlobaleZeit << std::endl;
 
-        w1.vSimulieren();
-        w2.vSimulieren();
+			w1.vSimulieren();
+			w2.vSimulieren();
 
-        Weg::vKopf();
-        std::cout << w1 << std::endl << w2 << std::endl;
-        Fahrzeug::vKopf();
-        for (const auto& fzg : w1.pGetFahrzeuge()) std::cout << *fzg << std::endl;
-        for (const auto& fzg : w2.pGetFahrzeuge()) std::cout << *fzg << std::endl;
+			Weg::vKopf();
+			std::cout << w1 << std::endl << w2 << std::endl;
+			Fahrzeug::vKopf();
+			for (const auto& fzg : w1.pGetFahrzeuge()) std::cout << *fzg << std::endl;
+			for (const auto& fzg : w2.pGetFahrzeuge()) std::cout << *fzg << std::endl;
+		}
+	}
+
+	std::cout << "\nTest mit Grafik (5.6)\n";
+
+    // Grafik initialisieren
+    if (!bInitialisiereGrafik(800, 500)) {
+        std::cerr << "Fehler beim Initialisieren der Grafik!" << std::endl;
+        return;
     }
+
+	// Zwei Wege à 500 km (grafisch als Hin- und Rückweg)
+    Weg wHin("A1_Hin", 500.0, Tempolimit::Autobahn);
+    Weg wRueck("A1_Rueck", 500.0, Tempolimit::Autobahn);
+
+    // Straße zeichnen (Hin + Rück als eine Straße)
+    int koordinaten[] = {700, 250, 100, 250};  // Gerade von rechts nach links
+    int anzahlKoord = 2;  // 2 Punkte → 4 Werte im Array
+
+    if (!bZeichneStrasse(wHin.sGetName(), wRueck.sGetName(), 500, anzahlKoord, koordinaten)) {
+        std::cerr << "Fehler beim Zeichnen der Straße!" << std::endl;
+    }
+
+    // Fahrzeuge (Beispiel: PKW und Fahrrad)
+    auto pkw1 = std::make_unique<PKW>("PKW_BMW", 180.0, 5);
+    auto rad1 = std::make_unique<Fahrrad>("Rad_Lisa", 30.0);
+
+    wHin.vAnnahme(std::move(pkw1));
+    wHin.vAnnahme(std::move(rad1), 1.0);  // Parkend, startet später
+
+    // Simulationsschleife mit Grafik-Update
+    double dIntervall = 0.05;  // Kleiner für flüssigere Grafik
+    for (int i = 0; i < 400; ++i) {  // ca. 20 Stunden simulieren
+        dGlobaleZeit += dIntervall;
+
+        vSetzeZeit(dGlobaleZeit);  // Zeit in Titel anzeigen
+
+        wHin.vSimulieren();
+        wRueck.vSimulieren();  // falls Rückweg genutzt
+
+        // Alle Fahrzeuge zeichnen
+        for (const auto& fzgPtr : wHin.pGetFahrzeuge()) {
+            fzgPtr->vZeichnen(wHin);
+        }
+        for (const auto& fzgPtr : wRueck.pGetFahrzeuge()) {
+            fzgPtr->vZeichnen(wRueck);
+        }
+
+        vSleep(100);  // 100 ms Pause → ca. 10 FPS
+    }
+
+    vBeendeGrafik();  // Am Ende schließen
+
 	// Test der Ausnahmen und Tempolimit:
 	// Wurde ein Simulationsobjekt mit dem Namen: "A1_Autobahn", und mit dem Id: 0 erstellt
 	// Wurde ein Simulationsobjekt mit dem Namen: "Stadtstrasse", und mit dem Id: 1 erstellt

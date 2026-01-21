@@ -25,6 +25,8 @@ public:
     void vAusgeben(std::ostream& o) const override;
 
     virtual double dGeschwindigkeit() const override;
+
+    virtual void vZeichnen(const Weg& weg) const override;
 };
 
 #endif // PKW_H
