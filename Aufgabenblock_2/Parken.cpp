@@ -1,7 +1,7 @@
 #include "Parken.h"
 #include "Fahrzeug.h"
 #include "Weg.h"
-#include "global.h"
+#include "Global.h"
 #include "Losfahren.h"
 
 Parken::Parken(Weg& weg, double dStartzeitpunkt) 

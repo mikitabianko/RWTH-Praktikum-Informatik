@@ -267,7 +267,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
 
 ## 5.8 Aufbau des Verkehrssystems
 
-- [ ] 1. Bisher besteht das Verkehrsnetz nur aus isolierten Wegen und darauf fahrenden Fahrzeugen. Die Wege sollen nun mittels Kreuzungen verbunden werden. Da die Infrastruktur gut ausgebaut ist, soll es keine Einbahnstraßen geben und eine Straße jeweils aus Hin- und Rückweg bestehen.
+- [x] 1. Bisher besteht das Verkehrsnetz nur aus isolierten Wegen und darauf fahrenden Fahrzeugen. Die Wege sollen nun mittels Kreuzungen verbunden werden. Da die Infrastruktur gut ausgebaut ist, soll es keine Einbahnstraßen geben und eine Straße jeweils aus Hin- und Rückweg bestehen.
     
     Erweitern Sie die Klassenhierarchie um die Klasse _Kreuzung_, die von _Simulationsobjekt_ abgeleitet wird. Die Klasse _Kreuzung_ speichert in einer Liste `p_pWege` alle von ihr wegführenden Wege und bekommt eine Membervariable `p_dTankstelle`. Die Variable speichert das Volumen, das einer Kreuzung zum Auftanken zur Verfügung steht. Überfährt ein _PKW_ eine Kreuzung mit Tankstelle (`p_dTankstelle > 0.0`), wird er vollgetankt und `p_dTankstelle` um die entsprechende Menge reduziert, so lange, bis die Tankstelle leer ist. Auch hier gibt es zur Vereinfachung eine Reserve, so dass auch der letzte _PKW_ volltanken kann.
     
@@ -281,7 +281,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
     
     Implementieren Sie eine Methode `Kreuzung::vAnnahme(unique_ptr<Fahrzeug>, double)`, die Fahrzeuge annimmt und diese parkend auf den ersten abgehenden Weg stellt. Die Fahrzeuge sollen dabei ggf. aufgetankt werden. Nun implementieren Sie eine Funktion `Kreuzung::vSimulieren()`, die alle von dieser Kreuzung abgehenden Wege simuliert.
     
-- [ ] 2. Beim Weiterleiten von Fahrzeugen sollen aus den wegführenden Wegen der Kreuzung zufällig einer ausgewählt werden. Dabei soll das Fahrzeug aber nicht dieselbe Straße zurückfahren, die es gekommen sind. Implementieren Sie dazu eine Funktion `shared_ptr<Weg> Kreuzung::pZufaelligerWeg(Weg&)`, die als Parameter eine Referenz auf den Weg enthält, über den die Kreuzung erreicht wurde. Der Rückgabewert soll der ausgewählte Weg für das Fahrzeug sein. Bei einer "Sackgasse" muss natürlich der zurückführende Weg genommen werden.
+- [x] 2. Beim Weiterleiten von Fahrzeugen sollen aus den wegführenden Wegen der Kreuzung zufällig einer ausgewählt werden. Dabei soll das Fahrzeug aber nicht dieselbe Straße zurückfahren, die es gekommen sind. Implementieren Sie dazu eine Funktion `shared_ptr<Weg> Kreuzung::pZufaelligerWeg(Weg&)`, die als Parameter eine Referenz auf den Weg enthält, über den die Kreuzung erreicht wurde. Der Rückgabewert soll der ausgewählte Weg für das Fahrzeug sein. Bei einer "Sackgasse" muss natürlich der zurückführende Weg genommen werden.
     
     Bauen Sie diese Funktion nun in die Bearbeitungsfunktion von _Streckenende_ ein, damit ein Fahrzeug, das am Ende des Weges angekommen ist, _fahrend_ auf einen so gefundenen Weg umgesetzt wird. Dabei soll auch getankt werden. Um die Bewegungen der Fahrzeuge besser verfolgen zu können, soll beim Umsetzen folgende Ausgabe erfolgen:
     
@@ -290,7 +290,7 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
     - **WECHSEL** : \[Name alter Weg] $\rightarrow$ \[Name neuer Weg]
     - **FAHRZEUG** : \[Daten des Fahrzeugs]
       ![image](https://github.com/mikitabianko/RWTH-Praktikum-Informatik/blob/master/assets/image3.png?raw=true)
-- [ ] 3. Testen Sie die bisherige Klasse _Kreuzung_ in `vAufgabe_7()`, indem Sie ein Verkehrsnetz entsprechend Figure 5.4 aufbauen und darin Fahrzeuge über die Kreuzung $Kr1$ annehmen. Für die grafische Darstellung der Kreuzung steht folgende Methode zur Verfügung:
+- [x] 3. Testen Sie die bisherige Klasse _Kreuzung_ in `vAufgabe_7()`, indem Sie ein Verkehrsnetz entsprechend Figure 5.4 aufbauen und darin Fahrzeuge über die Kreuzung $Kr1$ annehmen. Für die grafische Darstellung der Kreuzung steht folgende Methode zur Verfügung:
     
     `void bZeichneKreuzung(int posX, int posY);`
     

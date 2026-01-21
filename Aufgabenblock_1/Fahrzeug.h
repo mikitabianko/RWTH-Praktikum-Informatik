@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <iomanip>
-#include "global.h"
+#include "Global.h"
 
 class Fahrzeug {
 private:

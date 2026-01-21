@@ -1,7 +1,7 @@
 #include "Fahren.h"
 #include "Fahrzeug.h"
 #include "Weg.h"
-#include "global.h"
+#include "Global.h"
 
 Fahren::Fahren(Weg& weg) : Verhalten(weg) {}
 

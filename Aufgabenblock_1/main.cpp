@@ -8,7 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include "Fahrzeug.h"
-#include "global.h"
+#include "Global.h"
 #include "Fahrrad.h"
 #include "PKW.h"
 #include "Utils.h"

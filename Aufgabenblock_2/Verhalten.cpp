@@ -1,7 +1,7 @@
 #include "Verhalten.h"
 #include "Weg.h"
 #include "Fahrzeug.h"
-#include "global.h"
+#include "Global.h"
 
 Verhalten::Verhalten(Weg& weg) : p_aWeg(weg) {}
 

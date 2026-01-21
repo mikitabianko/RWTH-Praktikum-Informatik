@@ -5,11 +5,11 @@
 
 Weg::Weg() : Simulationsobjekt() { }
 
-Weg::Weg(std::string sName, double dLaenge, Tempolimit eTempolimit)
-    : Simulationsobjekt(sName), p_dLaenge(dLaenge), p_eTempolimit(eTempolimit) {
-    if (dLaenge <= 0.0) {
-        throw std::invalid_argument("Laenge muss positiv sein!");
-    }
+Weg::Weg(const std::string& sName, double dLaenge, Tempolimit eTempolimit,
+         std::weak_ptr<Kreuzung> ziel)
+    : Simulationsobjekt(sName), p_dLaenge(dLaenge), p_eTempolimit(eTempolimit),
+      p_pZielkreuzung(std::move(ziel)) {
+    if (dLaenge <= 0.0) throw std::invalid_argument("Laenge muss positiv sein!");
 }
 
 double Weg::dGetLaenge() const {
@@ -90,4 +90,8 @@ std::unique_ptr<Fahrzeug> Weg::pAbgabe(const Fahrzeug& aFzg) {
         }
     }
     return nullptr;
+}
+
+void Weg::vSetRueckweg(std::shared_ptr<Weg> rueck) {
+    p_pRueckweg = rueck;
 }

@@ -8,12 +8,13 @@
 #include <iostream>
 #include <algorithm>
 #include "Fahrzeug.h"
-#include "global.h"
+#include "Global.h"
 #include "Fahrrad.h"
 #include "PKW.h"
 #include "Utils.h"
 #include "Weg.h"
 #include "SimuClient.h"
+#include "Kreuzung.h"
 #include <random>
 
 // double dGlobaleZeit;
@@ -729,8 +730,8 @@ void vAufgabe_6() {
 		Weg wHin("A1_Hin", 500.0, Tempolimit::Autobahn);
 		Weg wRueck("A1_Rueck", 500.0, Tempolimit::Autobahn);
 
-		int koordinaten[] = {700, 250, 100, 250}; 
-		int anzahlKoord = 2;  
+		int koordinaten[] = {700, 250, 500, 400, 100, 250}; 
+		int anzahlKoord = 3;  
 
 		if (!bZeichneStrasse(wHin.sGetName(), wRueck.sGetName(), 500, anzahlKoord, koordinaten)) {
 			std::cerr << "Fehler beim Zeichnen der Straße!" << std::endl;
@@ -743,8 +744,8 @@ void vAufgabe_6() {
 		wHin.vAnnahme(std::move(rad1), 3.0);  
 
 		dGlobaleZeit = 0;
-		double dIntervall = 0.02;  
-		for (int i = 0; i < 400; ++i) { 
+		double dIntervall = 0.1;  
+		for (int i = 0; i < 500; ++i) { 
 			dGlobaleZeit += dIntervall;
 
 			vSetzeZeit(dGlobaleZeit);  // Zeit in Titel anzeigen
@@ -823,6 +824,66 @@ void vAufgabe_6a() {
 	// 0 1 4 4 4 3 5 11 
 }
 
+void vAufgabe_7() {
+	// Grafik initialisieren
+	if (!bInitialisiereGrafik(1200, 800)) {
+        std::cerr << "Fehler beim Initialisieren der Grafik!" << std::endl;
+        return;
+    }
+
+    auto kr1 = std::make_shared<Kreuzung>("Kr1");
+    auto kr2 = std::make_shared<Kreuzung>("Kr2", 1000);
+    auto kr3 = std::make_shared<Kreuzung>("Kr3");
+    auto kr4 = std::make_shared<Kreuzung>("Kr4");
+
+    Kreuzung::vVerbinde("S1hin", "S1rueck", 40.0,  kr1, kr2, Tempolimit::Innerorts);
+    Kreuzung::vVerbinde("S2hin", "S2rueck", 115.0, kr2, kr3, Tempolimit::Autobahn);   
+    Kreuzung::vVerbinde("S3hin", "S3rueck", 40.0,  kr2, kr3, Tempolimit::Innerorts);
+    Kreuzung::vVerbinde("S4hin", "S4rueck", 55.0,  kr2, kr4, Tempolimit::Innerorts);
+    Kreuzung::vVerbinde("S5hin", "S5rueck", 85.0,  kr4, kr3, Tempolimit::Autobahn);
+    Kreuzung::vVerbinde("S6hin", "S6rueck", 130.0, kr4, kr4, Tempolimit::Landstrasse);   
+
+    bZeichneKreuzung(680, 40);	// Kr1
+    bZeichneKreuzung(680, 300);	// Kr2
+    bZeichneKreuzung(680, 570);	// Kr3 
+    bZeichneKreuzung(320, 300);	// Kr4 
+
+    int pts1[] = {680, 40, 680, 300};
+    bZeichneStrasse("S1hin", "S1rueck", 40, 2, pts1);
+
+    int pts2[] = {680, 300, 850, 300, 970, 390, 970, 500, 850, 570, 680, 570};
+    bZeichneStrasse("S2hin", "S2rueck", 115, 6, pts2);
+
+    int pts3[] = {680, 300, 680, 570};
+    bZeichneStrasse("S3hin", "S3rueck", 40, 2, pts3);
+
+    int pts4[] = {680, 300, 320, 300};
+    bZeichneStrasse("S4hin", "S4rueck", 55, 2, pts4);
+
+    int pts5[] = {320, 300, 320, 420, 350, 510, 500, 570, 680, 570};
+    bZeichneStrasse("S5hin", "S5rueck", 85, 5, pts5);
+
+    int pts6[] = {320, 300, 320, 150, 200, 60, 80, 90, 70, 250, 170, 300, 320, 300};
+    bZeichneStrasse("S6hin", "S6rueck", 130, 7, pts6);
+
+    kr1->vAnnahme(std::make_unique<PKW>("BMW", 120.0, 9.0), 0.0);
+
+    double dIntervall = 0.05;  
+    while (true) {  
+        dGlobaleZeit += dIntervall;
+        vSetzeZeit(dGlobaleZeit);
+
+        for (auto& kr : { kr1, kr2, kr3, kr4 }) {
+            kr->vSimulieren();
+			kr->vZeichen();
+        }
+
+        vSleep(50);  
+    }
+
+    vBeendeGrafik();
+}
+
 int main() {
 
 	// vAufgabe_1();
@@ -838,8 +899,10 @@ int main() {
 
 	// vAufgabe_4();
 	// vAufgabe_5();
-	vAufgabe_6();
+	// vAufgabe_6();
 	// vAufgabe_6a();
+
+	vAufgabe_7();
 
 	return 0;
 }
