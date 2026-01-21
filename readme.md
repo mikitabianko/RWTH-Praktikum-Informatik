@@ -264,3 +264,34 @@ Oft wiederkehrende Datenstrukturen und Algorithmen können durch Templates allge
     Kurz: Wir setzen einen pseudo-random Generator ein, um Zufallszahlen zu erzeugen. In Zeile 1 erzeugen wir eine statische Variable (`device`), die den benutzten Algorithmus (`mt19937`, d.h. Mersenne-Twister-Engine) und den Initialwert (`seed`) festlegt. In Zeile 2 erzeugen wir eine Verteilung (Gleichverteilung mit Integerzahlen) und legen das gewünschte Intervall $[a, b]$ fest. In Zeile 3 wird mit Hilfe des Generators und der Verteilung eine entsprechende Zufallszahl bestimmt. Mehrere Zufallszahlen werden durch wiederholten Aufruf von `dist(device)` erzeugt. Für Details schauen Sie sich die Bibliothek `<random>` an. **Beachte**: Wir wollen reproduzierbare Ergebnisse erhalten, daher wählen wir einen festen Wert für `seed (0)`.
     
 - [ ] 3. Ersetzen Sie nun bei der Fahrzeugliste in _Weg_ die einfache Liste durch eine entsprechende `vertagt::VListe`. Sie sollten vor und nach jeder Simulation von Weg die Liste aktualisieren. Beachten Sie, dass Sie gegenüber der Nutzung des Templates für Integer bei der Nutzung mit `unique_ptr` noch Anpassungen zum Besitzwechsel durchführen müssen. Testen Sie nun nochmal `vAufgabe_6()`. Die eventuell aufgetretene Speicherschutzverletzung sollte nun nicht mehr auftreten. Achten Sie darauf, ob die Fahrzeuge in der Liste richtig umgesetzt und am Ende des Weges aus der Liste gelöscht werden. Kontrollieren Sie, ob auch die entsprechenden Fahrzeugobjekte automatisch gelöscht werden.
+
+## 5.8 Aufbau des Verkehrssystems
+
+- [ ] 1. Bisher besteht das Verkehrsnetz nur aus isolierten Wegen und darauf fahrenden Fahrzeugen. Die Wege sollen nun mittels Kreuzungen verbunden werden. Da die Infrastruktur gut ausgebaut ist, soll es keine Einbahnstraßen geben und eine Straße jeweils aus Hin- und Rückweg bestehen.
+    
+    Erweitern Sie die Klassenhierarchie um die Klasse _Kreuzung_, die von _Simulationsobjekt_ abgeleitet wird. Die Klasse _Kreuzung_ speichert in einer Liste `p_pWege` alle von ihr wegführenden Wege und bekommt eine Membervariable `p_dTankstelle`. Die Variable speichert das Volumen, das einer Kreuzung zum Auftanken zur Verfügung steht. Überfährt ein _PKW_ eine Kreuzung mit Tankstelle (`p_dTankstelle > 0.0`), wird er vollgetankt und `p_dTankstelle` um die entsprechende Menge reduziert, so lange, bis die Tankstelle leer ist. Auch hier gibt es zur Vereinfachung eine Reserve, so dass auch der letzte _PKW_ volltanken kann.
+    
+    Schreiben Sie eine statische Methode `Kreuzung::vVerbinde(...)`, welcher der Namen des Hin- und Rückweges, die Weglänge, die Start- und die Zielkreuzung sowie die gültige Geschwindigkeitsbegrenzung als Parameter übergeben wird. Diese Funktion muss statisch sein und beide Kreuzungen als Parameter übergeben bekommen.
+    
+    Um die Kreuzungen verbinden zu können, müssen die Wege erzeugt und untereinander bekannt gemacht werden, d.h. ein Weg kennt seinen direkten Rückweg und er weiß, auf welche Kreuzung er führt. Welche Art von Smartpointer können Sie für die Elemente von `p_pWege` wählen?
+    
+    Da Wege und Kreuzungen ggf. zyklisch wieder auf sich selbst verweisen, sollten die Variablen zur Speicherung der Zielkreuzung und des Rückweges vom Typ `weak_ptr` sein. Fügen Sie der Klasse _Weg_ entsprechende Membervariablen hinzu. Die Zielkreuzung kann `const` gewählt werden, da sie sich nicht verändert. Dazu müssen Sie den Konstruktor von Weg dementsprechend anpassen und die Zielkreuzung mit `nullptr` initialisieren. Warum können Sie die Variable für den Rückweg nicht `const` setzen? Schreiben Sie für beide Variablen _Getter_, die einen `shared_ptr` auf das Objekt zurückgeben. Wichtig hierbei ist zu beachten, dass Sie die Funktion `lock` der Smartpointer benutzen.
+    
+    Weiterhin soll in _Kreuzung_ die Funktion `vTanken(Fahrzeug&)` implementiert werden, die ggf. das übergebene Fahrzeug volltankt und den Inhalt der Tankstelle aktualisiert.
+    
+    Implementieren Sie eine Methode `Kreuzung::vAnnahme(unique_ptr<Fahrzeug>, double)`, die Fahrzeuge annimmt und diese parkend auf den ersten abgehenden Weg stellt. Die Fahrzeuge sollen dabei ggf. aufgetankt werden. Nun implementieren Sie eine Funktion `Kreuzung::vSimulieren()`, die alle von dieser Kreuzung abgehenden Wege simuliert.
+    
+- [ ] 2. Beim Weiterleiten von Fahrzeugen sollen aus den wegführenden Wegen der Kreuzung zufällig einer ausgewählt werden. Dabei soll das Fahrzeug aber nicht dieselbe Straße zurückfahren, die es gekommen sind. Implementieren Sie dazu eine Funktion `shared_ptr<Weg> Kreuzung::pZufaelligerWeg(Weg&)`, die als Parameter eine Referenz auf den Weg enthält, über den die Kreuzung erreicht wurde. Der Rückgabewert soll der ausgewählte Weg für das Fahrzeug sein. Bei einer "Sackgasse" muss natürlich der zurückführende Weg genommen werden.
+    
+    Bauen Sie diese Funktion nun in die Bearbeitungsfunktion von _Streckenende_ ein, damit ein Fahrzeug, das am Ende des Weges angekommen ist, _fahrend_ auf einen so gefundenen Weg umgesetzt wird. Dabei soll auch getankt werden. Um die Bewegungen der Fahrzeuge besser verfolgen zu können, soll beim Umsetzen folgende Ausgabe erfolgen:
+    
+    - **ZEIT** : \[Zeitpunkt der Umsetzung]
+    - **KREUZUNG** : \[Name der Kreuzung] \[Inhalt der Tankstelle]
+    - **WECHSEL** : \[Name alter Weg] $\rightarrow$ \[Name neuer Weg]
+    - **FAHRZEUG** : \[Daten des Fahrzeugs]
+      ![image](https://github.com/mikitabianko/RWTH-Praktikum-Informatik/blob/master/assets/image3.png?raw=true)
+- [ ] 3. Testen Sie die bisherige Klasse _Kreuzung_ in `vAufgabe_7()`, indem Sie ein Verkehrsnetz entsprechend Figure 5.4 aufbauen und darin Fahrzeuge über die Kreuzung $Kr1$ annehmen. Für die grafische Darstellung der Kreuzung steht folgende Methode zur Verfügung:
+    
+    `void bZeichneKreuzung(int posX, int posY);`
+    
+    Diese Funktion zeichnet eine Kreuzung an den Koordinaten $posX$ und $posY$. Setzen Sie dann die Tankkapazität für Kreuzung $Kr2$ auf $1000l$ und simulieren Sie die Kreuzungen. Alle anderen Kreuzungen haben keine Tankstelle (Tankkapazität = 0).
