@@ -1,0 +1,9 @@
+# Doxyfile fuer Versuch06
+
+PROJECT_NAME           = Versuch06
+OUTPUT_DIRECTORY       =
+INPUT                  =
+RECURSIVE              = NO
+EXTRACT_ALL            = NO
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO

@@ -1,1 +1,60 @@
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Editors and local tooling
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.terminal-build/
+
+# Local course material
+/pi1_skript_ss26_version260409.pdf
+
+# Eclipse workspace (project metadata remains versioned)
 /.metadata/
+
+# C/C++ build output
+Debug/
+Release/
+build/
+cmake-build-*/
+*.o
+*.obj
+*.d
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+compile_commands.json
+
+# Generated documentation (Doxygen)
+ET-Praktikum1/**/html/
+ET-Praktikum1/**/latex/
+
+# Qt/qmake generated files
+.qmake.cache
+.qmake.stash
+*.pro.user*
+*.qbs.user*
+Makefile.qmake
+moc_*.cpp
+moc_predefs.h
+qrc_*.cpp
+ui_*.h
+*.moc
+*.qm
+
+# Temporary and crash-recovery files
+*.autosave
+*.orig
+*.rej
+*.tmp
+*.bak
+core
+core.*
